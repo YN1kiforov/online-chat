@@ -1,0 +1,19 @@
+{
+  "name": "online-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YN1kiforov/online-chat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YN1kiforov/online-chat/issues"
+  },
+  "homepage": "https://github.com/YN1kiforov/online-chat#readme"
+}
