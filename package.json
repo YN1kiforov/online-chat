@@ -4,6 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js",
+    "dev": "concurrently \"npm start\" \"npm server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +18,13 @@
   "bugs": {
     "url": "https://github.com/YN1kiforov/online-chat/issues"
   },
-  "homepage": "https://github.com/YN1kiforov/online-chat#readme"
+  "homepage": "https://github.com/YN1kiforov/online-chat#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19",
+    "concurrently": "^7.3.0"
+  }
 }
