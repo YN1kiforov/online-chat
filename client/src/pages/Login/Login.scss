@@ -1,0 +1,69 @@
+$light-gray: #a6b0cf;
+$gray:#313942;
+$dark-gray: #262e35;
+
+.login {
+	background-color: $gray;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	color: $light-gray;
+	align-items: center;
+	justify-content: center;
+	&__wrapper {
+		max-width: 400px;
+		min-width: 400px;
+	}
+	&__card {
+		padding: 35px;
+		background-color: $dark-gray;
+		& .input {
+			&__title {
+				font-size: 18px;
+				margin: 10px 0px;
+			}
+			& input {
+				width: 100%;
+				border-radius: 5px;
+				background-color: #373f53;
+				height: 29px;
+				color: #e1e9f1;
+				padding: 4px 0px 4px 10px;
+				border: 0px;
+				outline: 0px;
+				font-size: 16px;
+			}
+			.error{
+				color: rgb(216, 16, 16);
+			}
+			
+		}
+
+	}
+	&__title {
+		text-align: center;
+	}
+	&__button{
+		margin: 20px 0px 0px 0px;
+		text-align: center;
+		& button{
+			width: 100%;
+			height: 30px;
+			background-color: #7269ef;
+			color: #e1e9f1;
+			border: 0px;
+		}
+	}
+	&__bottom{
+		margin: 20px 0px 0px 0px;
+		text-align: center;
+		& a {
+			color: $light-gray;
+		}
+	}
+}
+.form{
+	&:focus-visible{
+		-webkit-focus-ring-color: 0px;
+	}
+}
