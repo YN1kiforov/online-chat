@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-export const fetchAuth = createAsyncThunk('users/fetchByIdStatus', async (data) => {
-	console.log(`data => ${JSON.stringify(data)}`)
+export const fetchAuth = createAsyncThunk('users/fetchAuth', async (data) => {
 	const response = await axios.post('http://localhost:3001/login', data)
-	console.log(response)
+	return response.data
+})
+export const fetchRegistration = createAsyncThunk('users/fetchRegistration', async (data) => {
+	const response = await axios.post('http://localhost:3001/registration', data)
 	return response.data
 })
 const initialState = {
@@ -17,4 +19,6 @@ const authSlice = createSlice({
 	reducers: {},
 
 })
+
+export const userId = localStorage.getItem('userId')
 export const authReducer = authSlice.reducer;

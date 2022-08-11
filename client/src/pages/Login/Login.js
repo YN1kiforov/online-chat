@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 import './Login.scss'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import {Link} from 'react-router-dom'
-import {fetchAuth} from '../../redux/slices/auth'
+import { Link, Navigate } from 'react-router-dom'
+import { fetchAuth, userId } from '../../redux/slices/auth'
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Неправильный email').required('Обязательное поле'),
@@ -12,13 +12,15 @@ const SignupSchema = Yup.object().shape({
     .min(6, 'Минимум 6 символов')
     .max(50, 'Максимум 50 символов')
     .required('Обязательное поле'),
-
 });
 
 
-function Login() {
-
+export const Login = () => {
   const dispatch = useDispatch()
+  localStorage.clear()
+  if (userId) {  
+    return <Navigate to="/"/>
+  }
 
   return (
     <div className='login'>
@@ -28,14 +30,12 @@ function Login() {
           <Formik
             initialValues={{
               email: 'eemail@mail.ru',
-              password: 'password',            
+              password: 'password',
             }}
             validationSchema={SignupSchema}
             onSubmit={async (values) => {
-              alert('gg')
-
-              let res = await dispatch(fetchAuth(values))
-              console.log(res)
+              const res = await dispatch(fetchAuth(values))
+              res.payload ? localStorage.setItem('userId', res.payload.userId) : alert('Не удалось авторизоваться')
             }}
           >
             {({ errors, touched }) => (
@@ -61,12 +61,9 @@ function Login() {
           </Formik>
         </div>
         <div className='login__bottom'>
-          <Link to = '/registration'>Зарегистрироваться</Link>
+          <Link to='/registration'>Зарегистрироваться</Link>
         </div>
       </div>
     </div>
   )
 }
-
-
-export default Login;
