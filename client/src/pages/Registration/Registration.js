@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
 import './Registration.scss'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -21,9 +22,10 @@ const SignupSchema = Yup.object().shape({
 
 export const Registration = () => {
   const dispatch = useDispatch()
-  if (userId) {
-    return <Navigate to="/" />
-  }
+  const UserId = useSelector(userId);
+  if (UserId) return <Navigate to="/"/>
+  
+  
 
   return (
     <div className='registration'>
@@ -48,7 +50,7 @@ export const Registration = () => {
                 <div className='input'>
                   <div className='input__title'>Как вас зовут</div>
                   <Field name="name" />
-                  {errors.email && touched.email ? <div className='error'>{errors.email}</div> : null}
+                  {errors.name && touched.name ? <div className='error'>{errors.name}</div> : null}
                 </div>
 
 
@@ -66,14 +68,14 @@ export const Registration = () => {
                   ) : null}
                 </div>
                 <div className='registration__button'>
-                  <button className='' type="submit">Войти</button>
+                  <button className='' type="submit">Зарегистрироваться</button>
                 </div>
               </Form>
             )}
           </Formik>
         </div>
         <div className='registration__bottom'>
-          <Link to='/registration'>Войти в аккаунт</Link>
+          <Link to='/login'>Войти в аккаунт</Link>
         </div>
       </div>
     </div>

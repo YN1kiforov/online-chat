@@ -13,9 +13,6 @@ mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
 
-app.get('/', (req, res) => {
-	res.json({})
-})
 app.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body

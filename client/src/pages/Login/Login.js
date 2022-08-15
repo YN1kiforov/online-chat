@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './Login.scss'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -16,11 +16,13 @@ const SignupSchema = Yup.object().shape({
 
 
 export const Login = () => {
+  console.log('render')
   const dispatch = useDispatch()
-  localStorage.clear()
-  if (userId) {  
+  const UserId = useSelector(userId);
+  if (UserId) {  
     return <Navigate to="/"/>
   }
+  
 
   return (
     <div className='login'>
@@ -34,8 +36,7 @@ export const Login = () => {
             }}
             validationSchema={SignupSchema}
             onSubmit={async (values) => {
-              const res = await dispatch(fetchAuth(values))
-              res.payload ? localStorage.setItem('userId', res.payload.userId) : alert('Не удалось авторизоваться')
+              await dispatch(fetchAuth(values))        
             }}
           >
             {({ errors, touched }) => (

@@ -16,9 +16,24 @@ const initialState = {
 const authSlice = createSlice({
 	name: 'auth',
 	initialState,
-	reducers: {},
-
+	reducers: {
+		logout: (state) => {
+			state.data = null
+		}
+	},
+	extraReducers: {
+		[fetchAuth.pending]: (state) => {
+			state.data = null;
+		},
+		[fetchAuth.fulfilled]: (state, action) => {
+			state.data = action.payload;
+		},
+		[fetchAuth.rejected]: (state) => {
+			state.data = null;
+		},
+	}
 })
 
-export const userId = localStorage.getItem('userId')
+export const { logout } = authSlice.actions;
+export const userId = (state) => state.auth.data
 export const authReducer = authSlice.reducer;
