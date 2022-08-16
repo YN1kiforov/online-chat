@@ -15,6 +15,79 @@ mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
 
+
+app.post('/createMessage', async (req, res) => {
+	try {
+		const { name, usersId } = req.body
+		const message = await new Message({ name, usersId })
+
+		await message.save()
+		message ? res.status(200).json({
+			message: `Чат успешно создан`,
+			users: usersId,
+		})
+			: res.status(400).json({
+				message: "Не получилось создать чат"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
+	}
+})
+app.post('/findAllUserChat', async (req, res) => {
+	try {
+		const { userId } = req.body
+
+		const data = await Chat.find({ usersId: userId });
+
+		data ? res.status(200).json({
+			message: `Чат найден`,
+			data: data,
+		})
+			: res.status(400).json({
+				message: "Не получилось создать чат"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка при поиске чата: ${e}` })
+	}
+})
+app.post('/createChat', async (req, res) => {
+	try {
+		const { name, usersId } = req.body
+		const chat = await new Chat({ name, usersId })
+
+		await chat.save()
+		chat ? res.status(200).json({
+			message: `Чат успешно создан`,
+			users: usersId,
+		})
+			: res.status(400).json({
+				message: "Не получилось создать чат"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
+	}
+})
+
+
+app.get('/allUsers', async (req, res) => {
+	try {
+		const data = await User.find()
+		data ? res.status(200).json({
+			message: `Пользователи найдены`,
+			users: data,
+		})
+			: res.status(400).json({
+				message: "Пользователи не найдены"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка при поиске пользователя: ${e}` })
+	}
+})
+
 app.post('/login', async (req, res) => {
 	try {
 		const { email, password } = req.body
