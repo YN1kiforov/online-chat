@@ -99,13 +99,15 @@ function Main() {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={() => { handleClose(); dispatch(logout()) }}>Log out</MenuItem>
+              <MenuItem sx ={{color: "red"}} onClick={() => { handleClose(); dispatch(logout()) }}>Log out</MenuItem>
             </Menu>
           </div>
         </div>
       </div>
+
+
       <div className={s.side_bar}>
-        <h2 className={s.side_bar__title}></h2>
+        <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           <li className={s.side_bar__item}>
             <div className={s.item__img}>

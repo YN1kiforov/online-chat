@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 
 const User = require('./models/User')
+const Chat = require('./models/Chat')
+const Message = require('./models/Message')
 
 const port = 3001
 
@@ -39,12 +41,6 @@ app.post('/registration', async (req, res) => {
 		console.log(req.body)
 		const { name, email, password } = req.body
 		const user = new User({ name, email, password })
-		//const data = await User.findOne({ email })
-		// if (!data?.id) {
-		// 	res.status(400).json({
-		// 		message: "Пользователь с такой почтой уже создан"
-		// 	})
-		// }
 		await user.save()
 		res.status(200).json({
 			message: "Пользователь создан"
