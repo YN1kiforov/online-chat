@@ -35,5 +35,5 @@ const authSlice = createSlice({
 })
 
 export const { logout } = authSlice.actions;
-export const userId = (state) => state.auth.data
+export const UserId = (state) => state.auth.data?.userId
 export const authReducer = authSlice.reducer;

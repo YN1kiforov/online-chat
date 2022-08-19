@@ -13,28 +13,6 @@ function App() {
       <Route path='/' element={<Main />}></Route>
     </Routes>
   )
-
-
-  // let map = 'content'
-  // return (
-  //   <div className="wrapper">
-  //     <div className='navbar'>
-  //       <div className='navbar__logo'></div>
-  //       <div className='navbar__center'>
-  //         <ul className='navbar__links'>
-  //           {map}
-  //         </ul>
-  //       </div>
-  //       <div className='navbar__bottom'></div>
-  //     </div>
-
-
-
-
-  //     <div className='chat-sidebar'></div>
-  //     <div className='user-chat'></div>
-  //   </div>
-  // );
 }
 
 export default App;

@@ -3,6 +3,7 @@ $gray: #313942;
 $dark-gray: #262e35;
 
 .wrapper {
+	color: $light-gray;
 	display: grid;
 	grid-template-areas: "menu1 side-bar chat";
 	grid-template-columns: 75px 384px auto;
@@ -26,16 +27,89 @@ $dark-gray: #262e35;
 			margin: 0px 0px 0px 0px;
 		}
 	}
-	&__bottom{
-		
-	}
 }
 
 .side_bar {
 	grid-area: side-bar;
 	background-color: #303841;
+
+	&__chat {
+		cursor: pointer;
+		font-size: 20px;
+		margin: 0px 0px 6px 0px;
+		padding: 15px 0px;
+		&:hover {
+			background-color: #3e4558;
+		}
+		&_name {
+			display: flex;
+			align-items: center;
+			pointer-events: none;
+		}
+	}
 }
 .chat {
 	grid-area: chat;
 	background-color: #262e35;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	&__top {
+		min-height: 60px;
+		display: flex;
+		align-items: center;
+	}
+	&__content {
+		height: 100%;
+		border: solid $light-gray;
+		border-width: 1px 0px 1px 0px;
+	}
+
+	&__user {
+		display: flex;
+		align-items: center;
+	}
+	&__img {
+		margin: 0px 15px 0px 5px;
+	}
+	&__bot {
+		min-height: 80px;
+		display: flex;
+		align-items: center;
+		padding: 0px 20px;
+	}
+	&__input {
+		height: 45px;
+		width: 100%;
+		border-radius: 8px;
+		background-color: #36404a;
+		color: $light-gray;
+		font-size: 18px;
+		padding: 0px 0px 0px 0px;
+	}
+	&__send {
+		margin-left: 20px;
+		height: 45px;
+		width: 45px;
+		border-radius: 4px;
+		background-color: #6159cb;
+	}
+	&__messages {
+		padding: 0px 20px;
+	}
+	&__message {
+		& > p {
+			display: inline-block;
+			background-color: #6159cb;
+			padding: 10px 10px 10px 10px;
+			color: white;
+		}
+		&.owner {
+			display: flex;
+			justify-content: right;
+			& > p {
+				background-color: #36404a;
+			}
+		}
+	}
 }

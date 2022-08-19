@@ -7,24 +7,41 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip'
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
+import TelegramIcon from '@mui/icons-material/Telegram';
 import Menu from "@mui/material/Menu";
 
 import { logout } from '../../redux/slices/auth'
-import { useState } from 'react'
-import { userId } from '../../redux/slices/auth'
+import { useState, useEffect } from 'react'
+import { UserId } from '../../redux/slices/auth'
+import { fetchFindAllUserChat, fetchFindMessages } from '../../redux/slices/chat'
+
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom'
 
-
 import s from "./MainPage.module.scss"
 function Main() {
-  const UserId = useSelector(userId);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [messages, setMessages] = useState(null);
+  const [chats, setChats] = useState(null);
+  const userId = useSelector(UserId);
   const dispatch = useDispatch()
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  if (!UserId) {
+  useEffect(() => {
+    (async () => {
+      const data = await dispatch(fetchFindAllUserChat(userId))
+      setChats(data?.payload?.data)
+    })()
+  }, []);
+
+  const changeChat = async (currentChatId) => {
+    const data = await dispatch(fetchFindMessages(currentChatId))
+    setMessages(data?.payload?.messages)
+  }
+
+  if (!userId) {
     return <Navigate to="/login" />
   }
+
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -55,7 +72,7 @@ function Main() {
               </Tooltip>
             </li>
             <li className={s.menu__item}>
-              <Tooltip title="Users" placement="bottom" sx={{ cursor: 'pointer' }}>
+              <Tooltip title="Users" placement="bottom">
                 <IconButton>
                   <PeopleAltIcon sx={{ fontSize: '35px', color: '#a6b0cf' }} />
                 </IconButton>
@@ -99,47 +116,45 @@ function Main() {
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem sx ={{color: "red"}} onClick={() => { handleClose(); dispatch(logout()) }}>Log out</MenuItem>
+              <MenuItem sx={{ color: "red" }} onClick={() => { handleClose(); dispatch(logout()) }}>Log out</MenuItem>
             </Menu>
           </div>
         </div>
       </div>
-
-
       <div className={s.side_bar}>
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
-          <li className={s.side_bar__item}>
-            <div className={s.item__img}>
-              <img src=''></img>
+          {chats ? chats.map((item) => {
+            return <div onClick={(e) => { changeChat(e.target.id) }} className={s.side_bar__chat} id={item._id}>
+              <div className={s.side_bar__chat_name}>{item.name}</div>
             </div>
-            <div className={s.item__info}>
-              <div className={s.item__name}></div>
-              <div className={s.item__text}></div>
-            </div>
-          </li>
+          }) : <div className=''>Не найдено чата</div>}
         </ul>
       </div>
-
       <div className={s.chat}>
         <div className={s.chat__top}>
           <div className={s.chat__user}>
-            <div className={s.user__img}></div>
-            <div className={s.user__name}></div>
-
+            <div className={s.chat__img}>
+              <FaceSharpIcon sx={{ fontSize: '35px', color: '#a6b0cf' }} />
+            </div>
+            <div className={s.chat__name}>Name</div>
           </div>
         </div>
-        <div className={s.chat__content}>
-          <div className={s.chat__message}></div>
+        <div className={s.chat__content} >
+
+          <ul className={s.chat__messages}>
+            {messages ? messages.map((message) => {
+              return <div className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
+            }) : <div className=''>Выберите чат</div>}
+          </ul>
         </div>
         <div className={s.chat__bot}>
-          <input className={s.chat__bot} value="dsa" />
-          <button className={s.chat__send}>dsdsa</button>
-
+          <input className={s.chat__input} placeholder="Отправить сообщение" />
+          <button className={s.chat__send}>
+            <TelegramIcon sx={{ color: "white" }} />
+          </button>
         </div>
-
       </div>
-
     </div>)
 }
 

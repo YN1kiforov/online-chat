@@ -5,7 +5,7 @@ import './Registration.scss'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from 'react-router-dom'
-import { fetchRegistration, userId } from '../../redux/slices/auth'
+import { fetchRegistration, UserId } from '../../redux/slices/auth'
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -22,8 +22,8 @@ const SignupSchema = Yup.object().shape({
 
 export const Registration = () => {
   const dispatch = useDispatch()
-  const UserId = useSelector(userId);
-  if (UserId) return <Navigate to="/"/>
+  const userId = useSelector(UserId);
+  if (userId) return <Navigate to="/"/>
   
   
 

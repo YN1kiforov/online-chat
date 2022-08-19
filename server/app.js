@@ -14,17 +14,32 @@ app.use(express.json())
 mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
-
-
-app.post('/createMessage', async (req, res) => {
+app.post('/getMessages', async (req, res) => {
 	try {
-		const { name, usersId } = req.body
-		const message = await new Message({ name, usersId })
+		const { chatId } = req.body
+		const messages = await Message.find({chatId})
+		
+		messages ? res.status(200).json({
+			message: `Сообщения успешно получены`,
+			messages,
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
+app.post('/sendMessage', async (req, res) => {
+	try {
+		const { content, userId, chatId } = req.body
+		const message = await new Message({ content, userId, chatId })
 
 		await message.save()
 		message ? res.status(200).json({
-			message: `Чат успешно создан`,
-			users: usersId,
+			message: `Сообщение успешно создано`,
 		})
 			: res.status(400).json({
 				message: "Не получилось создать чат"
@@ -39,6 +54,8 @@ app.post('/findAllUserChat', async (req, res) => {
 		const { userId } = req.body
 
 		const data = await Chat.find({ usersId: userId });
+
+		console.log(JSON.stringify(req.body))
 
 		data ? res.status(200).json({
 			message: `Чат найден`,
@@ -70,7 +87,6 @@ app.post('/createChat', async (req, res) => {
 		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
 	}
 })
-
 
 app.get('/allUsers', async (req, res) => {
 	try {

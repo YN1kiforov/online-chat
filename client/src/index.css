@@ -6,6 +6,10 @@ ul{
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
 }
+input,button{
+  border: 0px;
+  outline: 0px;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

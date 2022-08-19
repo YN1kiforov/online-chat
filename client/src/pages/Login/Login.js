@@ -4,7 +4,7 @@ import './Login.scss'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from 'react-router-dom'
-import { fetchAuth, userId } from '../../redux/slices/auth'
+import { fetchAuth, UserId } from '../../redux/slices/auth'
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Неправильный email').required('Обязательное поле'),
@@ -16,13 +16,12 @@ const SignupSchema = Yup.object().shape({
 
 
 export const Login = () => {
-  console.log('render')
   const dispatch = useDispatch()
-  const UserId = useSelector(userId);
-  if (UserId) {  
-    return <Navigate to="/"/>
+  const userId = useSelector(UserId);
+  if (userId) {
+    return <Navigate to="/" />
   }
-  
+
 
   return (
     <div className='login'>
@@ -36,7 +35,7 @@ export const Login = () => {
             }}
             validationSchema={SignupSchema}
             onSubmit={async (values) => {
-              await dispatch(fetchAuth(values))        
+              await dispatch(fetchAuth(values))
             }}
           >
             {({ errors, touched }) => (
