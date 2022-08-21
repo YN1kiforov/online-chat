@@ -37,7 +37,7 @@ $dark-gray: #262e35;
 		cursor: pointer;
 		font-size: 20px;
 		margin: 0px 0px 6px 0px;
-		padding: 15px 0px;
+		padding: 15px 0px 15px 10px;
 		&:hover {
 			background-color: #3e4558;
 		}
@@ -62,6 +62,7 @@ $dark-gray: #262e35;
 	&__content {
 		height: 100%;
 		border: solid $light-gray;
+
 		border-width: 1px 0px 1px 0px;
 	}
 
@@ -96,6 +97,8 @@ $dark-gray: #262e35;
 	}
 	&__messages {
 		padding: 0px 20px;
+		overflow: auto;
+		max-height: 795px;
 	}
 	&__message {
 		& > p {

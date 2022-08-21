@@ -3,22 +3,43 @@ const app = express()
 const mongoose = require('mongoose');
 const cors = require('cors')
 
+const http = require('http');
+
+const server = http.createServer(app);
+
+const { Server } = require("socket.io");
+const io = require("socket.io")(server, {
+	cors: {
+		origin: '*',
+	}
+});
+
 const User = require('./models/User')
 const Chat = require('./models/Chat')
 const Message = require('./models/Message')
 
 const port = 3001
 
+
 app.use(cors())
 app.use(express.json())
 mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
+
+io.on('connection', (socket) => {
+	socket.on('chat message', (data) => {
+		socket.emit('chat message', data)
+	})
+
+});
+
+
 app.post('/getMessages', async (req, res) => {
 	try {
 		const { chatId } = req.body
-		const messages = await Message.find({chatId})
-		
+		const messages = await Message.find({ chatId })
+
 		messages ? res.status(200).json({
 			message: `Сообщения успешно получены`,
 			messages,
@@ -48,6 +69,7 @@ app.post('/sendMessage', async (req, res) => {
 	catch (e) {
 		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
 	}
+
 })
 app.post('/findAllUserChat', async (req, res) => {
 	try {
@@ -140,6 +162,7 @@ app.post('/registration', async (req, res) => {
 	}
 })
 
-app.listen(port, () => {
+
+server.listen(port, () => {
 	console.log('Server has been started');
 })

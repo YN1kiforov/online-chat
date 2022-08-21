@@ -10,38 +10,51 @@ import MenuItem from "@mui/material/MenuItem";
 import TelegramIcon from '@mui/icons-material/Telegram';
 import Menu from "@mui/material/Menu";
 
+import { io } from "socket.io-client";
 import { logout } from '../../redux/slices/auth'
 import { useState, useEffect } from 'react'
 import { UserId } from '../../redux/slices/auth'
 import { fetchFindAllUserChat, fetchFindMessages } from '../../redux/slices/chat'
+import { sendMessage } from '../../redux/slices/message'
+
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom'
 
 import s from "./MainPage.module.scss"
+
+const socket = io(":3001");
+
 function Main() {
+  const [currentChatId, setCurrentChatId] = useState(null);
+  const [value, setValue] = useState("");
   const [messages, setMessages] = useState(null);
   const [chats, setChats] = useState(null);
   const userId = useSelector(UserId);
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null);
 
+
+  const [lastPong, setLastPong] = useState(null);
+
   useEffect(() => {
+
     (async () => {
       const data = await dispatch(fetchFindAllUserChat(userId))
       setChats(data?.payload?.data)
     })()
   }, []);
-
-  const changeChat = async (currentChatId) => {
-    const data = await dispatch(fetchFindMessages(currentChatId))
-    setMessages(data?.payload?.messages)
-  }
-
   if (!userId) {
     return <Navigate to="/login" />
   }
-
+  const changeChat = async (ChatId) => {
+    const data = await dispatch(fetchFindMessages(ChatId))
+    setMessages(data?.payload?.messages)
+    setCurrentChatId(ChatId);
+  }
+  socket.on('chat message', (data) => {
+    changeChat(currentChatId)
+  })
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,6 +62,12 @@ function Main() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const submitMessage = async () => {
+    const res = await dispatch(sendMessage({ userId, value, currentChatId }))
+    setValue("")
+    socket.emit('chat message', { value, chatId: currentChatId, userId, });
+
+  }
   return (
     <div className={s.wrapper}>
       <div className={s.menu}>
@@ -149,8 +168,8 @@ function Main() {
           </ul>
         </div>
         <div className={s.chat__bot}>
-          <input className={s.chat__input} placeholder="Отправить сообщение" />
-          <button className={s.chat__send}>
+          <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
+          <button onClick={submitMessage} className={s.chat__send}>
             <TelegramIcon sx={{ color: "white" }} />
           </button>
         </div>
