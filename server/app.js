@@ -7,7 +7,6 @@ const http = require('http');
 
 const server = http.createServer(app);
 
-const { Server } = require("socket.io");
 const io = require("socket.io")(server, {
 	cors: {
 		origin: '*',
@@ -19,7 +18,6 @@ const Chat = require('./models/Chat')
 const Message = require('./models/Message')
 
 const port = 3001
-
 
 app.use(cors())
 app.use(express.json())
@@ -161,7 +159,6 @@ app.post('/registration', async (req, res) => {
 		res.status(400).json({ message: `ошибка при создании пользователя: ${e}` })
 	}
 })
-
 
 server.listen(port, () => {
 	console.log('Server has been started');

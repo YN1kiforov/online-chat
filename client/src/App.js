@@ -3,6 +3,8 @@ import './App.scss';
 import { Routes, Route } from "react-router-dom";
 import { Login } from './pages/Login/Login';
 import { Registration } from './pages/Registration/Registration';
+import { Users } from './pages/Users/Users';
+
 
 
 import Main from './pages/MainPage/MainPage';
@@ -15,6 +17,8 @@ function App() {
       <Route path='/login' element={<Login />}></Route>
       <Route path='/registration' element={<Registration />}></Route>
       <Route path='/' element={<Main />}></Route>
+      <Route path='/users' element={<Users />}></Route>
+      
     </Routes>
   )
 }
