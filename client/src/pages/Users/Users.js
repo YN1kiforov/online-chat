@@ -1,5 +1,5 @@
 import { InsertComment } from "@mui/icons-material"
-
+import Modal from '@mui/material/Modal';
 import { useState, useEffect } from 'react'
 import { fetchAllUsers } from '../../redux/slices/users'
 
@@ -15,6 +15,11 @@ export const Users = () => {
   const [userList, setUserList] = useState(null)
   const dispatch = useDispatch()
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
   useEffect(() => {
     (async () => {
       const data = await dispatch(fetchAllUsers())
@@ -25,6 +30,15 @@ export const Users = () => {
 
   return (
     <div className={s.wrapper}>
+      <Modal className={s.modal}
+        open={true}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div >
+        </div>
+      </Modal>
       <SideMenu></SideMenu>
       <div className={s.content}>
         {userList

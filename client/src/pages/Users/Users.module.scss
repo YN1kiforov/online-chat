@@ -37,7 +37,7 @@ $dark-gray: #262e35;
 	gap: 20px;
 	font-size: 24px;
 }
-.button{
+.button {
 	width: 40px;
 	height: 40px;
 	background-color: rgb(14, 14, 252);
@@ -46,10 +46,22 @@ $dark-gray: #262e35;
 	justify-content: center;
 	cursor: pointer;
 }
-.user{
+.user {
 	display: flex;
 	border: 1px solid gray;
 	padding: 0px 20px;
 	justify-content: space-between;
 	align-items: center;
+}
+.modal {
+	& > div {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 200px;
+		height: 200px;
+		transform: translate(-50%, -50%);
+
+		background-color: red;
+	}
 }
