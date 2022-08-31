@@ -54,14 +54,30 @@ $dark-gray: #262e35;
 	align-items: center;
 }
 .modal {
-	& > div {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: 200px;
-		height: 200px;
-		transform: translate(-50%, -50%);
-
-		background-color: red;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	height: 200px;
+	font-size: 24px;
+	transform: translate(-50%, -50%);
+	color: white;
+	text-align: center;
+	padding: 30px 10px;
+	background-color: rgb(69, 69, 80);
+	& > input {
+		top: 0;
+		left: 0;
+		width: 300px;
+		height: 30px;
+		font-size: 18px;
 	}
+	& button {
+		height: 30px;
+		color: white;
+		background-color: rgb(14, 137, 252);
+	}
+}
+.title {
+	margin-bottom: 30px;
 }

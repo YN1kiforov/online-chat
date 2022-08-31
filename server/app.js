@@ -25,14 +25,12 @@ mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
 
+
 io.on('connection', (socket) => {
 	socket.on('chat message', (data) => {
-		socket.emit('chat message', data)
+		io.emit('chat message', data)
 	})
-
 });
-
-
 app.post('/getMessages', async (req, res) => {
 	try {
 		const { chatId } = req.body
@@ -50,6 +48,25 @@ app.post('/getMessages', async (req, res) => {
 		res.status(400).json({ message: `Ошибка: ${e}` })
 	}
 })
+
+app.post('/deleteAllMessages', async (req, res) => {
+	try {
+		const messages = await Message.find()
+		console.log(messages)
+		messages.forEach(el => { el.remove() })
+		messages ? res.status(200).json({
+			message: `Сообщения успешно получены`,
+			messages,
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
 
 app.post('/sendMessage', async (req, res) => {
 	try {
@@ -74,8 +91,6 @@ app.post('/findAllUserChat', async (req, res) => {
 		const { userId } = req.body
 
 		const data = await Chat.find({ usersId: userId });
-
-		console.log(JSON.stringify(req.body))
 
 		data ? res.status(200).json({
 			message: `Чат найден`,

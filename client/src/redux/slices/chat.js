@@ -9,6 +9,11 @@ export const fetchFindMessages = createAsyncThunk('users/getMessages', async (da
 	const response = await axios.post('http://localhost:3001/getMessages', { chatId: data })
 	return response.data
 })
+export const createChat = createAsyncThunk('users/createChat', async (data) => {
+	const response = await axios.post('http://localhost:3001/createChat', { name: data.value, usersId: data.usersId })
+	return response.data
+})
+
 
 const initialState = {};
 

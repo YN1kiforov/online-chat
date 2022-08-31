@@ -2,8 +2,9 @@ import { FaceSharp, PermIdentitySharp, InsertComment, PeopleAlt, Settings, Accou
 import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
 
 import { io } from "socket.io-client";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { UserId, logout } from '../../redux/slices/auth'
+
 import { fetchFindAllUserChat, fetchFindMessages } from '../../redux/slices/chat'
 import { sendMessage } from '../../redux/slices/message'
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,36 +17,51 @@ import s from "./MainPage.module.scss"
 const socket = io(":3001");
 
 function Main() {
-
-  const [currentChatId, setCurrentChatId] = useState(null);
+  console.log('render')
+  const scrollRef = useRef();
+  const [currentChat, setCurrentChat] = useState(null);
   const [value, setValue] = useState("");
-  const [messages, setMessages] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(null);
   const userId = useSelector(UserId);
   const dispatch = useDispatch()
 
+  const changeChat = async (Chat) => {
+    const data = await dispatch(fetchFindMessages(Chat._id))
+    setMessages(data?.payload?.messages)
+    setCurrentChat(Chat);
+  }
+
+  useEffect(() => {
+    console.log(`chat ${JSON.stringify(currentChat)}`)
+  }, [currentChat])
   useEffect(() => {
     (async () => {
       const data = await dispatch(fetchFindAllUserChat(userId))
       setChats(data?.payload?.data)
     })()
   }, []);
+  useEffect(() => {
+    socket.on('chat message', async (msg) => {
+      console.log(`msg ${msg.chatId} chat ${currentChat?._id}  ==  ${msg.chatId === currentChat?._id}`)
+      if (Array.isArray(messages) && msg.chatId === currentChat?._id) setMessages((prev) => [...prev, msg]);
+    })
+    return () => {
+      socket.off('chat message');
+    };
+  }, [currentChat])
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   if (!userId) {
     return <Navigate to="/login" />
   }
-  const changeChat = async (ChatId) => {
-    const data = await dispatch(fetchFindMessages(ChatId))
-    setMessages(data?.payload?.messages)
-    setCurrentChatId(ChatId);
-  }
-  socket.on('chat message', () => {
-    changeChat(currentChatId)
-  })
+
 
   const submitMessage = async () => {
-    await dispatch(sendMessage({ userId, value, currentChatId }))
+    await dispatch(sendMessage({ userId, value, currentChatId: currentChat._id }))
     setValue("")
-    socket.emit('chat message', { value, chatId: currentChatId, userId, });
+    socket.emit('chat message', { content: value, chatId: currentChat._id, userId, });
   }
   return (
     <div className={s.wrapper}>
@@ -54,7 +70,7 @@ function Main() {
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           {chats ? chats.map((item) => {
-            return <div onClick={(e) => { changeChat(e.target.id) }} className={s.side_bar__chat} id={item._id}>
+            return <div onClick={(e) => { changeChat(item) }} className={s.side_bar__chat}>
               <div className={s.side_bar__chat_name}>{item.name}</div>
             </div>
           }) : <div className=''>Не найдено чата</div>}
@@ -73,7 +89,7 @@ function Main() {
 
           <ul className={s.chat__messages}>
             {messages ? messages.map((message) => {
-              return <div className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
+              return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
             }) : <div className=''>Выберите чат</div>}
           </ul>
         </div>
