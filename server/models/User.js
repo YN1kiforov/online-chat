@@ -13,7 +13,8 @@ const schema = new Schema({
 	password: {
 		type: String,
 		required: true
-	}
+	},
+	avatarURL: String
 })
 
 module.exports = model('User', schema)

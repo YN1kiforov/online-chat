@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose');
 const cors = require('cors')
+const fs = require('fs');
+const multer = require('multer');
 
 const http = require('http');
 
@@ -31,6 +33,31 @@ io.on('connection', (socket) => {
 		io.emit('chat message', data)
 	})
 });
+const storage = multer.diskStorage({
+	destination: (_, __, cb) => {
+		if (!fs.existsSync('uploads')) {
+			fs.mkdirSync('uploads');
+		}
+		cb(null, 'uploads');
+	},
+	filename: (_, file, cb) => {
+		cb(null, file?.originalname);
+	},
+});
+const upload = multer({ storage });
+
+
+app.use('/uploads', express.static('uploads'));
+
+app.post('/upload', upload.single('image'), (req, res) => {
+	res.json({
+		url: `/uploads/${req.file?.originalname}`,
+	});
+});
+
+
+
+
 app.post('/getMessages', async (req, res) => {
 	try {
 		const { chatId } = req.body
@@ -39,6 +66,26 @@ app.post('/getMessages', async (req, res) => {
 		messages ? res.status(200).json({
 			message: `Сообщения успешно получены`,
 			messages,
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
+app.post('/getMessage', async (req, res) => {
+	try {
+
+		const { userId } = req.body
+		const message = await Message.find({ userId }).populate({ path: "userId", model: "User" })
+
+		console.log(message)
+		message ? res.status(200).json({
+			message: `Сообщения успешно получены`,
+			message,
 		})
 			: res.status(400).json({
 				message: "Не получилось"
@@ -67,6 +114,28 @@ app.post('/deleteAllMessages', async (req, res) => {
 	}
 })
 
+app.post('/setUserName', async (req, res) => {
+	try {
+		const { userId, newName } = req.body;
+		await User.updateOne({ _id: userId }, { $set: { name: newName } })
+
+		res.status(200).json({ message: `НУ вроде норм` })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
+app.post('/getUser', async (req, res) => {
+	try {
+		const { userId } = req.body
+		const user = await User.findOne({ userId })
+		res.status(200).json({ user })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
 
 app.post('/sendMessage', async (req, res) => {
 	try {
@@ -90,7 +159,7 @@ app.post('/findAllUserChat', async (req, res) => {
 	try {
 		const { userId } = req.body
 
-		const data = await Chat.find({ usersId: userId });
+		const data = await Chat.find({ usersId: userId }).populate({ path: "usersId", model: "User" });
 
 		data ? res.status(200).json({
 			message: `Чат найден`,
@@ -106,6 +175,7 @@ app.post('/findAllUserChat', async (req, res) => {
 })
 app.post('/createChat', async (req, res) => {
 	try {
+		console.log(req.body)
 		const { name, usersId } = req.body
 		const chat = await new Chat({ name, usersId })
 

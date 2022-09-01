@@ -1,0 +1,38 @@
+$light-gray: #a6b0cf;
+$gray: #313942;
+$dark-gray: #262e35;
+
+.wrapper {
+	color: $light-gray;
+	display: grid;
+	grid-template-areas: "menu1 content";
+	grid-template-columns: 75px auto;
+	grid-template-rows: 100vh;
+	background-color: $dark-gray;
+}
+.content{
+	max-width: 1300px;
+	background-color: $gray;
+	margin: 0 auto;
+	width: 100%;
+	padding: 0px 40px;
+}
+.top{
+	display: flex;
+	margin-top: 40px;
+	align-items: center;
+}
+.avatar{
+	width: 80px;
+	height: 80px;
+	background-color: yellow;
+	border-radius: 50%;
+	margin: 0px 0px 0px 0px;
+}
+.name{
+	font-size: 40px;
+	margin-left: 20px;
+}
+.about{
+	margin-top: 30px;
+}

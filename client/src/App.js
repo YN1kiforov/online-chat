@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import { Login } from './pages/Login/Login';
 import { Registration } from './pages/Registration/Registration';
 import { Users } from './pages/Users/Users';
+import { Profile } from './pages/Profile/Profile';
+import { Settings } from './pages/Settings/Settings';
 
 
 
@@ -18,7 +20,8 @@ function App() {
       <Route path='/registration' element={<Registration />}></Route>
       <Route path='/' element={<Main />}></Route>
       <Route path='/users' element={<Users />}></Route>
-      
+      <Route path='/profile' element={<Profile />}></Route>
+      <Route path='/settings' element={<Settings />}></Route>
     </Routes>
   )
 }

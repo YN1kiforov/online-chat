@@ -2,13 +2,11 @@ import { FaceSharp, PermIdentitySharp, InsertComment, PeopleAlt, Settings, Accou
 import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
 
 import { useState } from 'react'
-import { UserId, logout } from '../redux/slices/auth'
-import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/slices/auth'
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-
 import s from "../pages/MainPage/MainPage.module.scss"
-
 
 export const SideMenu = () => {
 
@@ -94,8 +92,18 @@ export const SideMenu = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
+
+            <Link to="/profile" style={{ textDecoration: 'none' }}>
+              <MenuItem onClick={handleClose} sx={{ color: "black" }}>
+                Profile
+              </MenuItem>
+            </Link>
+            <Link to="/settings" style={{ textDecoration: 'none' }}>
+              <MenuItem sx={{ color: "black" }} onClick={handleClose}>
+                Settings
+              </MenuItem>
+            </Link>
+
             <MenuItem sx={{ color: "red" }} onClick={() => { handleClose(); dispatch(logout()) }}>Log out</MenuItem>
           </Menu>
         </div>

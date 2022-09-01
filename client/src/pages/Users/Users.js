@@ -41,8 +41,8 @@ export const Users = () => {
 
   const createNewChat = async () => {
     handleClose()
+    await dispatch(createChat({ value: "", usersId: [userId, companionId] }))
     setValue("");
-    let res = await dispatch(createChat({ value, usersId: [userId, companionId] }))
   }
 
   return (
@@ -57,9 +57,10 @@ export const Users = () => {
           aria-describedby="modal-modal-description"
         >
           <div className={s.modal}>
-            <div className={s.title}>Введите название чата</div>
+            <div className={s.title}>Введите название чата </div>
             <input value={value} onChange={(e) => { setValue(e.target.value) }}></input>
-            <button onClick={(e) => { createNewChat(id) }}>Создать</button>
+            <button onClick={(e) => { createNewChat() }}>Создать</button>
+            <div className = {s.tip}>(Если вы не введете название, то будет использоваться имя собеседника)</div>
           </div>
         </Modal>
         {userList

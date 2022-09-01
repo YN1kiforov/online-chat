@@ -1,9 +1,8 @@
-import { FaceSharp, PermIdentitySharp, InsertComment, PeopleAlt, Settings, AccountCircle, Telegram } from "@mui/icons-material"
-import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
+import { FaceSharp, Telegram } from "@mui/icons-material"
 
 import { io } from "socket.io-client";
 import { useState, useEffect, useRef } from 'react'
-import { UserId, logout } from '../../redux/slices/auth'
+import { UserId, } from '../../redux/slices/auth'
 
 import { fetchFindAllUserChat, fetchFindMessages } from '../../redux/slices/chat'
 import { sendMessage } from '../../redux/slices/message'
@@ -17,7 +16,6 @@ import s from "./MainPage.module.scss"
 const socket = io(":3001");
 
 function Main() {
-  console.log('render')
   const scrollRef = useRef();
   const [currentChat, setCurrentChat] = useState(null);
   const [value, setValue] = useState("");
@@ -33,9 +31,6 @@ function Main() {
   }
 
   useEffect(() => {
-    console.log(`chat ${JSON.stringify(currentChat)}`)
-  }, [currentChat])
-  useEffect(() => {
     (async () => {
       const data = await dispatch(fetchFindAllUserChat(userId))
       setChats(data?.payload?.data)
@@ -43,7 +38,6 @@ function Main() {
   }, []);
   useEffect(() => {
     socket.on('chat message', async (msg) => {
-      console.log(`msg ${msg.chatId} chat ${currentChat?._id}  ==  ${msg.chatId === currentChat?._id}`)
       if (Array.isArray(messages) && msg.chatId === currentChat?._id) setMessages((prev) => [...prev, msg]);
     })
     return () => {
@@ -70,8 +64,10 @@ function Main() {
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           {chats ? chats.map((item) => {
+            let name = item.name || ((item?.usersId[0]._id == userId) ? item?.usersId[1].name : item?.usersId[0].name)
             return <div onClick={(e) => { changeChat(item) }} className={s.side_bar__chat}>
-              <div className={s.side_bar__chat_name}>{item.name}</div>
+
+              <div className={s.side_bar__chat_name}>{name}</div>
             </div>
           }) : <div className=''>Не найдено чата</div>}
         </ul>
