@@ -12,7 +12,7 @@ export const setUserName = createAsyncThunk('users/setUserName', async (data) =>
 	return response.data
 })
 export const getUser = createAsyncThunk('users/getUser', async (data) => {
-	const response = await axios.post('http://localhost:3001/getUser',{userId: data.userId})
+	const response = await axios.post('http://localhost:3001/getUser', {userId: data})
 	return response.data
 })
 const userSlice = createSlice({

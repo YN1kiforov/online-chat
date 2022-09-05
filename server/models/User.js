@@ -14,7 +14,18 @@ const schema = new Schema({
 		type: String,
 		required: true
 	},
-	avatarURL: String
+	avatarURL: {
+		type: String,
+	},
+	county: {
+		type: String,
+	},
+	city: {
+		type: String,
+	},
+	about: {
+		type: String,
+	},
 })
 
 module.exports = model('User', schema)

@@ -49,14 +49,23 @@ const upload = multer({ storage });
 
 app.use('/uploads', express.static('uploads'));
 
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('image'), async (req, res) => {
 	res.json({
 		url: `/uploads/${req.file?.originalname}`,
 	});
 });
+app.post('/setUserData', async (req, res) => {
+	try {
+		console.log(req.body)
+		const { userId, name, county, city, about, imageUrl } = req.body;
+		await User.updateOne({ _id: userId }, { $set: { name, county, city, about, avatarURL: imageUrl } })
 
-
-
+		res.status(200).json({ data: { name, county, city, about } })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
 
 app.post('/getMessages', async (req, res) => {
 	try {
@@ -114,22 +123,12 @@ app.post('/deleteAllMessages', async (req, res) => {
 	}
 })
 
-app.post('/setUserName', async (req, res) => {
-	try {
-		const { userId, newName } = req.body;
-		await User.updateOne({ _id: userId }, { $set: { name: newName } })
 
-		res.status(200).json({ message: `НУ вроде норм` })
-	}
-	catch (e) {
-		res.status(400).json({ message: `Ошибка: ${e}` })
-	}
-})
 
 app.post('/getUser', async (req, res) => {
 	try {
 		const { userId } = req.body
-		const user = await User.findOne({ userId })
+		const user = await User.findOne({ _id: userId })
 		res.status(200).json({ user })
 	}
 	catch (e) {
