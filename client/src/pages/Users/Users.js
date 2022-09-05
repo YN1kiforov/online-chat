@@ -11,7 +11,7 @@ import { Navigate } from 'react-router-dom'
 
 
 import s from "./Users.module.scss"
-import { UserId, logout } from '../../redux/slices/auth'
+import { UserId } from '../../redux/slices/auth'
 
 
 export const Users = () => {
@@ -23,7 +23,6 @@ export const Users = () => {
   const handleOpen = (Id) => {
     setCompanionId(Id)
   };
-  let id;
   const handleClose = () => setCompanionId(null);
 
   const userId = useSelector(UserId);
@@ -59,18 +58,20 @@ export const Users = () => {
           <div className={s.modal}>
             <div className={s.title}>Введите название чата </div>
             <input value={value} onChange={(e) => { setValue(e.target.value) }}></input>
-            <button onClick={(e) => { createNewChat() }}>Создать</button>
-            <div className = {s.tip}>(Если вы не введете название, то будет использоваться имя собеседника)</div>
+            <button onClick={createNewChat}>Создать</button>
+            <div className={s.tip}>(Если вы не введете название, то будет использоваться имя собеседника)</div>
           </div>
         </Modal>
         {userList
           ? userList.map((user) => {
-            return <div className={s.user} >
-              <div className={s.name}>{user.name}</div>
-              <div className={s.button} onClick={() => { handleOpen(user._id) }} >
-                <InsertComment sx={{ color: '#a6b0cf' }}></InsertComment>
+            if (userId !== user._id) {
+              return <div className={s.user} >
+                <div className={s.name}>{user.name}</div>
+                <div className={s.button} onClick={() => { handleOpen(user._id) }} >
+                  <InsertComment sx={{ color: '#a6b0cf' }}></InsertComment>
+                </div>
               </div>
-            </div>
+            }
           })
           : <div> Не удалось найти пользователей</div>}
       </div>

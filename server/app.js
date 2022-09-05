@@ -19,11 +19,11 @@ const User = require('./models/User')
 const Chat = require('./models/Chat')
 const Message = require('./models/Message')
 
-const port = 3001
+const port = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
-mongoose.connect('mongodb+srv://admin1:admin@cluster0.rp9lz.mongodb.net/test')
+mongoose.connect(process.env.MONGODB_URI)
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
 
@@ -172,12 +172,32 @@ app.post('/findAllUserChat', async (req, res) => {
 		res.status(400).json({ message: `Ошибка при поиске чата: ${e}` })
 	}
 })
+app.post('/isChatExist', async (req, res) => {
+	try {
+		const { name, usersId } = req.body
+
+		chat ? res.status(200).json({
+			message: `+`,
+			chat
+		})
+			: res.status(400).json({
+				message: "-"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: "-" })
+	}
+})
 app.post('/createChat', async (req, res) => {
 	try {
-		console.log(req.body)
 		const { name, usersId } = req.body
-		const chat = await new Chat({ name, usersId })
 
+			(async function isChatExist() {
+				const chat = await Chat.findOne({ usersId })
+				if (!chat) res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
+			})()
+
+		const chat = await new Chat({ name, usersId })
 		await chat.save()
 		chat ? res.status(200).json({
 			message: `Чат успешно создан`,

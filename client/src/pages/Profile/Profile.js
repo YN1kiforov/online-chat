@@ -76,23 +76,19 @@ export const Profile = () => {
               : <img src={`http://localhost:3001${user?.avatarURL}`} />
             }
           </div>
-
           {isEdit
             ? <input name="name" value={formik.values.name} onChange={formik.handleChange} />
             : <div className={s.name}>{user?.name}</div>
           }
-
-
           {isEdit
             ? null
             : <Tooltip title="Редактировать" placement="bottom">
               <IconButton onClick={() => { setIsEdit(true); formik.values.name = user.name }}>
-                <EditIcon sx={{ fontSize: '35px', color: '#a6b0cf' }} />
+                <EditIcon sx={{ fontSize: '30px', color: '#a6b0cf' }} />
               </IconButton>
             </Tooltip>
           }
         </div>
-
         {isEdit
           ? <input onChange={handleChangeFile} type="file" />
           : null
@@ -106,7 +102,6 @@ export const Profile = () => {
                 ? <input name='county' value={formik.values.county} onChange={formik.handleChange} />
                 : <div>{user?.county}</div>
               }
-
             </div>
             <div className={s.item}>
               <label>Город проживания:</label>
@@ -121,7 +116,6 @@ export const Profile = () => {
                 ? <textarea name='about' value={formik.values.about} onChange={formik.handleChange} />
                 : <div>{user?.about}</div>
               }
-
             </div>
           </div>
         </div>

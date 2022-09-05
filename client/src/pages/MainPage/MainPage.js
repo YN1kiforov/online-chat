@@ -35,6 +35,7 @@ function Main() {
       const data = await dispatch(fetchFindAllUserChat(userId))
       setChats(data?.payload?.data)
     })()
+
   }, []);
   useEffect(() => {
     socket.on('chat message', async (msg) => {
@@ -43,6 +44,7 @@ function Main() {
     return () => {
       socket.off('chat message');
     };
+
   }, [currentChat])
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,9 +66,8 @@ function Main() {
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           {chats ? chats.map((item) => {
-            let name = item.name || ((item?.usersId[0]._id == userId) ? item?.usersId[1].name : item?.usersId[0].name)
-            return <div onClick={(e) => { changeChat(item) }} className={s.side_bar__chat}>
-
+            const name = item.name || ((item?.usersId[0]._id == userId) ? item?.usersId[1].name : item?.usersId[0].name)
+            return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
               <div className={s.side_bar__chat_name}>{name}</div>
             </div>
           }) : <div className=''>Не найдено чата</div>}
@@ -78,16 +79,19 @@ function Main() {
             <div className={s.chat__img}>
               <FaceSharp sx={{ fontSize: '35px', color: '#a6b0cf' }} />
             </div>
-            <div className={s.chat__name}>Name</div>
+            <div className={s.chat__name}>{currentChat?.name || ((currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1].name : currentChat?.usersId[0].name)}</div>
           </div>
         </div>
         <div className={s.chat__content} >
+          {currentChat
+            ? <ul className={s.chat__messages}>
+              {messages.length !== 0 ? messages.map((message) => {
+                return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
+              }) : <div className={s.helper}>Начните диалог</div>}
+            </ul>
+            : <div className={s.helper}>Выберите чат</div>
+          }
 
-          <ul className={s.chat__messages}>
-            {messages ? messages.map((message) => {
-              return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
-            }) : <div className=''>Выберите чат</div>}
-          </ul>
         </div>
         <div className={s.chat__bot}>
           <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
