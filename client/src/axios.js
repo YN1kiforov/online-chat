@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-
+console.log(`url = ${process.env.REACT_APP_API_URL}`)
 const instance = axios.create({
-	baseURL: 'http://localhost:3001'
+	baseURL: 'https://online-chat-mern.herokuapp.com'
 })
 
 
