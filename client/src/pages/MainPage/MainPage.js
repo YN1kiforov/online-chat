@@ -13,7 +13,7 @@ import { SideMenu } from '../../components/SideMenu'
 
 import s from "./MainPage.module.scss"
 
-const socket = io(":3001");
+const socket = io("");
 
 function Main() {
   const scrollRef = useRef();
