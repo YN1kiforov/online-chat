@@ -13,7 +13,7 @@ import { SideMenu } from '../../components/SideMenu'
 
 import s from "./MainPage.module.scss"
 
-const socket = io("");
+const socket = io("https://online-chat-mern.herokuapp.com");
 
 function Main() {
   const scrollRef = useRef();
