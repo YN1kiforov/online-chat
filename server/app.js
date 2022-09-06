@@ -23,11 +23,11 @@ const port = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
-mongoose.connect('mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
+const {MONGO_URI} = process.env
+console.log(process.env)
+mongoose.connect(MONGO_URI || 'mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
-
-
 io.on('connection', (socket) => {
 	socket.on('chat message', (data) => {
 		io.emit('chat message', data)
