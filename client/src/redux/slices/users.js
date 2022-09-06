@@ -1,18 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import axios from '../../axios'
 
 const initialState = {}
 
 export const fetchAllUsers = createAsyncThunk('users/fetchByIdStatus', async () => {
-	const response = await axios.get('http://localhost:3001/allUsers')
+	const response = await axios.get('/allUsers')
 	return response.data
 })
 export const setUserName = createAsyncThunk('users/setUserName', async (data) => {
-	const response = await axios.post('http://localhost:3001/setUserName')
+	const response = await axios.post('/setUserName')
 	return response.data
 })
 export const getUser = createAsyncThunk('users/getUser', async (data) => {
-	const response = await axios.post('http://localhost:3001/getUser', {userId: data})
+	const response = await axios.post('/getUser', {userId: data})
 	return response.data
 })
 const userSlice = createSlice({

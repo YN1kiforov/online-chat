@@ -11,7 +11,7 @@ import { useFormik } from 'formik';
 
 import s from "./Profile.module.scss"
 import { UserId } from '../../redux/slices/auth'
-import axios from 'axios';
+import axios from '../../axios'
 
 export const Profile = () => {
 
@@ -30,7 +30,7 @@ export const Profile = () => {
       about: '',
     },
     onSubmit: async (values) => {
-      const { data } = await axios.post('http://localhost:3001/setUserData', { userId, ...values, imageUrl });
+      const { data } = await axios.post('/setUserData', { userId, ...values, imageUrl });
       const { name, county, city, about } = data.data
       setUser((prev) => ({ ...prev, name, county, city, about, avatarURL: imageUrl }))
       setIsEdit(false)
@@ -54,7 +54,7 @@ export const Profile = () => {
       const file = e.target.files[0]
       formData.append('image', file);
       formData.append('userId', userId);
-      const { data } = await axios.post('http://localhost:3001/upload', formData);
+      const { data } = await axios.post('/upload', formData);
       setImageUrl(data.url)
     } catch (err) {
       alert('Ошибка при загрузке файла!');
@@ -72,8 +72,8 @@ export const Profile = () => {
         <div className={s.top}>
           <div className={s.avatar}>
             {isEdit
-              ? <img src={`http://localhost:3001${imageUrl}`} />
-              : <img src={`http://localhost:3001${user?.avatarURL}`} />
+              ? <img src={`https://online-chat-mern.herokuapp.com${imageUrl}`} />
+              : <img src={`https://online-chat-mern.herokuapp.com${user?.avatarURL}`} />
             }
           </div>
           {isEdit

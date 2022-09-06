@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import axios from '../../axios'
 
 export const sendMessage = createAsyncThunk('message/sendMessage', async (data) => {
 
@@ -7,7 +7,7 @@ export const sendMessage = createAsyncThunk('message/sendMessage', async (data) 
 	const content = value
 	const chatId = currentChatId
 
-	const response = await axios.post('http://localhost:3001/sendMessage', { content, userId, chatId })
+	const response = await axios.post('/sendMessage', { content, userId, chatId })
 	return response.data
 })
 
