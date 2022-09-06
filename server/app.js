@@ -23,7 +23,7 @@ const port = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect('mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
 
@@ -191,11 +191,10 @@ app.post('/isChatExist', async (req, res) => {
 app.post('/createChat', async (req, res) => {
 	try {
 		const { name, usersId } = req.body
-
-			(async function isChatExist() {
-				const chat = await Chat.findOne({ usersId })
-				if (!chat) res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
-			})()
+			// (async function isChatExist() {
+			// 	const chat = await Chat.findOne({ usersId })
+			// 	if (!chat) res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
+			// })()
 
 		const chat = await new Chat({ name, usersId })
 		await chat.save()
