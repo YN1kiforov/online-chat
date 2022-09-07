@@ -6,7 +6,6 @@ const fs = require('fs');
 const multer = require('multer');
 app.get('/', (req, res) => { res.send('Вроде') });
 const http = require('http');
-app.use(cors())
 app.use(express.json())
 const server = http.createServer(app);
 
@@ -32,6 +31,8 @@ io.on('connection', (socket) => {
 		io.emit('chat message', data)
 	})
 });
+app.use(cors())
+
 const storage = multer.diskStorage({
 	destination: (_, __, cb) => {
 		if (!fs.existsSync('uploads')) {
@@ -233,7 +234,7 @@ app.post('/registration', async (req, res) => {
 	console.log(req.body)
 	try {
 		const { name, email, password } = req.body
-		const user = await new User({ name, email, password})
+		const user = await new User({ name, email, password })
 		await user.save()
 		res.status(200).json({
 			message: "Пользователь создан"

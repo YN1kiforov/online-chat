@@ -1,10 +1,10 @@
-import { InsertComment, Tty } from "@mui/icons-material"
+import { InsertComment } from "@mui/icons-material"
 import Modal from '@mui/material/Modal';
 
 import { useState, useEffect } from 'react'
 import { fetchAllUsers } from '../../redux/slices/users'
 import { createChat } from '../../redux/slices/chat'
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { SideMenu } from '../../components/SideMenu'
@@ -15,18 +15,12 @@ import s from "./Users.module.scss"
 import { UserId } from '../../redux/slices/auth'
 
 
-const UsersHelper = () => {
+export const Users = () => {
   const [value, setValue] = useState("")
   const [userList, setUserList] = useState(null)
   const dispatch = useDispatch()
 
   const { enqueueSnackbar } = useSnackbar("This is a success message!", { variant: "error" });
-
-  const handleClickVariant = (variant) => () => {
-    enqueueSnackbar("This is a success message!", { variant });
-  };
-
-
 
   const [companionId, setCompanionId] = useState(null);
   const handleOpen = (Id) => {
@@ -55,7 +49,7 @@ const UsersHelper = () => {
       setValue("");
     } else {
       enqueueSnackbar("Такой чат уже есть", { variant: "error", autoHideDuration: 3000 })
-    } 
+    }
   }
 
   return (
@@ -93,9 +87,4 @@ const UsersHelper = () => {
       </div>
     </div>
   )
-}
-export const Users = () => {
-  return <SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} maxSnack={3}>
-    <UsersHelper></UsersHelper>
-  </SnackbarProvider>
 }
