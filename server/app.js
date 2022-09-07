@@ -6,7 +6,9 @@ const fs = require('fs');
 const multer = require('multer');
 app.get('/', (req, res) => { res.send('Вроде') });
 const http = require('http');
+app.use(cors())
 
+app.use(express.json())
 const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
@@ -21,8 +23,7 @@ const Message = require('./models/Message')
 
 const port = process.env.PORT || 3001
 
-app.use(cors())
-app.use(express.json())
+
 const { MONGO_URI } = process.env
 mongoose.connect(MONGO_URI || 'mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
 	.then(() => console.log(`DB has been connected`))
