@@ -17,7 +17,7 @@ export const Profile = () => {
   const userId = useSelector(UserId);
   const dispatch = useDispatch()
   const [user, setUser] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState('/uploads/incognito.png');
   const [isEdit, setIsEdit] = useState(false);
 
 
@@ -44,9 +44,7 @@ export const Profile = () => {
       setImageUrl(user?.payload?.user?.avatarURL)
     })()
   }, [])
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+
   const handleChangeFile = async (e) => {
     try {
       const formData = new FormData();

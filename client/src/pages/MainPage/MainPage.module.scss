@@ -45,6 +45,13 @@ $dark-gray: #262e35;
 			align-items: center;
 			pointer-events: none;
 		}
+		display: flex;
+		& img{
+			width: 30px;
+			height: 30px;
+			margin-right: 20px;
+			border-radius: 50%;
+		}
 	}
 }
 .chat {
@@ -70,6 +77,11 @@ $dark-gray: #262e35;
 	}
 	&__img {
 		margin: 0px 15px 0px 5px;
+		& img{
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+		}
 	}
 	&__bot {
 		min-height: 80px;

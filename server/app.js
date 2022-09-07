@@ -23,7 +23,7 @@ const port = process.env.PORT || 3001
 
 app.use(cors())
 app.use(express.json())
-const {MONGO_URI} = process.env
+const { MONGO_URI } = process.env
 mongoose.connect(MONGO_URI || 'mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
@@ -55,10 +55,8 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 });
 app.post('/setUserData', async (req, res) => {
 	try {
-		console.log(req.body)
 		const { userId, name, county, city, about, imageUrl } = req.body;
 		await User.updateOne({ _id: userId }, { $set: { name, county, city, about, avatarURL: imageUrl } })
-
 		res.status(200).json({ data: { name, county, city, about } })
 	}
 	catch (e) {
@@ -90,7 +88,6 @@ app.post('/getMessage', async (req, res) => {
 		const { userId } = req.body
 		const message = await Message.find({ userId }).populate({ path: "userId", model: "User" })
 
-		console.log(message)
 		message ? res.status(200).json({
 			message: `Сообщения успешно получены`,
 			message,
@@ -107,7 +104,6 @@ app.post('/getMessage', async (req, res) => {
 app.post('/deleteAllMessages', async (req, res) => {
 	try {
 		const messages = await Message.find()
-		console.log(messages)
 		messages.forEach(el => { el.remove() })
 		messages ? res.status(200).json({
 			message: `Сообщения успешно получены`,
@@ -171,35 +167,21 @@ app.post('/findAllUserChat', async (req, res) => {
 		res.status(400).json({ message: `Ошибка при поиске чата: ${e}` })
 	}
 })
-app.post('/isChatExist', async (req, res) => {
-	try {
-		const { name, usersId } = req.body
 
-		chat ? res.status(200).json({
-			message: `+`,
-			chat
-		})
-			: res.status(400).json({
-				message: "-"
-			})
-	}
-	catch (e) {
-		res.status(400).json({ message: "-" })
-	}
-})
 app.post('/createChat', async (req, res) => {
 	try {
-		const { name, usersId } = req.body
-			// (async function isChatExist() {
-			// 	const chat = await Chat.findOne({ usersId })
-			// 	if (!chat) res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
-			// })()
+		const { name, usersId } = req.body;
 
+		const isChatExist = !!(await Chat.findOne({ usersId }))
+		if (isChatExist) {
+			return res.status(400).json({ message: `Такой чат был уже создан` })
+		}
 		const chat = await new Chat({ name, usersId })
 		await chat.save()
 		chat ? res.status(200).json({
 			message: `Чат успешно создан`,
 			users: usersId,
+			status: 200,
 		})
 			: res.status(400).json({
 				message: "Не получилось создать чат"
@@ -249,9 +231,8 @@ app.post('/login', async (req, res) => {
 
 app.post('/registration', async (req, res) => {
 	try {
-		console.log(req.body)
 		const { name, email, password } = req.body
-		const user = new User({ name, email, password })
+		const user = new User({ name, email, password, avatarURL: '/uploads/incognito.png' })
 		await user.save()
 		res.status(200).json({
 			message: "Пользователь создан"

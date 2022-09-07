@@ -28,6 +28,10 @@ $dark-gray: #262e35;
 	background-color: yellow;
 	border-radius: 50%;
 	margin: 0px 0px 0px 0px;
+	& img {
+		width: 80px;
+		height: 80px;
+	}
 }
 .name {
 	font-size: 40px;
@@ -57,7 +61,7 @@ $dark-gray: #262e35;
 .bot {
 	display: flex;
 	justify-content: end;
-	& button{
+	& button {
 		cursor: pointer;
 		display: flex;
 		align-items: center;
@@ -72,5 +76,4 @@ $dark-gray: #262e35;
 }
 .cancel_btn {
 	background-color: red;
-
 }

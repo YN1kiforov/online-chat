@@ -53,7 +53,6 @@ function Main() {
     return <Navigate to="/login" />
   }
 
-
   const submitMessage = async () => {
     await dispatch(sendMessage({ userId, value, currentChatId: currentChat._id }))
     setValue("")
@@ -66,39 +65,52 @@ function Main() {
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           {chats ? chats.map((item) => {
-            const name = item.name || ((item?.usersId[0]._id == userId) ? item?.usersId[1].name : item?.usersId[0].name)
+            const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
+            const name = item.name || companion.name
+            const imageURL = companion?.avatarURL || '/uploads/incognito.png'
             return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
+              <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
               <div className={s.side_bar__chat_name}>{name}</div>
             </div>
           }) : <div className=''>Не найдено чата</div>}
         </ul>
       </div>
       <div className={s.chat}>
-        <div className={s.chat__top}>
-          <div className={s.chat__user}>
-            <div className={s.chat__img}>
-              <FaceSharp sx={{ fontSize: '35px', color: '#a6b0cf' }} />
-            </div>
-            <div className={s.chat__name}>{currentChat?.name || ((currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1].name : currentChat?.usersId[0].name)}</div>
-          </div>
-        </div>
-        <div className={s.chat__content} >
-          {currentChat
-            ? <ul className={s.chat__messages}>
-              {messages.length !== 0 ? messages.map((message) => {
-                return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
-              }) : <div className={s.helper}>Начните диалог</div>}
-            </ul>
-            : <div className={s.helper}>Выберите чат</div>
-          }
+        {currentChat
+          ? <>
 
-        </div>
-        <div className={s.chat__bot}>
-          <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
-          <button onClick={submitMessage} className={s.chat__send}>
-            <Telegram sx={{ color: "white" }} />
-          </button>
-        </div>
+            <div className={s.chat__top}>
+              {(() => {
+                const companion = (currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1] : currentChat?.usersId[0]
+                const name = currentChat.name || companion.name
+                const imageURL = companion?.avatarURL || '/uploads/incognito.png'
+                return <div className={s.chat__user}>
+                  <div className={s.chat__img}>
+                    <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
+                  </div>
+                  <div className={s.chat__name}>{currentChat?.name || ((currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1].name : currentChat?.usersId[0].name)}</div>
+                </div>
+              })()}
+            </div>
+            <div className={s.chat__content} >
+              <ul className={s.chat__messages}>
+                {messages.length !== 0 ? messages.map((message) => {
+                  return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
+                }) : <div className={s.helper}>Начните диалог</div>}
+              </ul>
+
+
+            </div>
+            <div className={s.chat__bot}>
+              <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
+              <button onClick={submitMessage} className={s.chat__send}>
+                <Telegram sx={{ color: "white" }} />
+              </button>
+            </div>
+          </>
+          : <div className={s.helper}>Выберите чат</div>
+        }
+
       </div>
     </div>)
 }

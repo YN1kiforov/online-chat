@@ -28,40 +28,40 @@ export const SideMenu = () => {
       <div className={s.menu__center}>
         <ul className={s.menu__list}>
           <li className={s.menu__item}>
-            <Tooltip title="Profile" placement="bottom">
-              <IconButton>
-                <Link to="/profile">
+            <Link to="/profile">
+              <Tooltip title="Profile" placement="bottom">
+                <IconButton>
                   <PermIdentitySharp sx={{ fontSize: '35px', color: '#a6b0cf' }} />
-                </Link>
-              </IconButton>
-            </Tooltip>
+                </IconButton>
+              </Tooltip>
+            </Link>
           </li>
           <li className={s.menu__item}>
-            <Tooltip title="Chats" placement="bottom">
-              <IconButton>
-                <Link to="/">
+            <Link to="/">
+              <Tooltip title="Chats" placement="bottom">
+                <IconButton>
                   <InsertComment sx={{ fontSize: '35px', color: '#a6b0cf' }} />
-                </Link>
-              </IconButton>
-            </Tooltip>
+                </IconButton>
+              </Tooltip>
+            </Link>
           </li>
           <li className={s.menu__item}>
-            <Tooltip title="Users" placement="bottom">
-              <IconButton>
-                <Link to="/users">
+            <Link to="/users">
+              <Tooltip title="Users" placement="bottom">
+                <IconButton>
                   <PeopleAlt sx={{ fontSize: '35px', color: '#a6b0cf' }} />
-                </Link>
-              </IconButton>
-            </Tooltip>
+                </IconButton>
+              </Tooltip>
+            </Link>
           </li>
           <li className={s.menu__item}>
-            <Tooltip title="Settings" placement="bottom" >
-              <IconButton>
-                <Link to="/settings">
+            <Link to="/settings">
+              <Tooltip title="Settings" placement="bottom" >
+                <IconButton>
                   <Settings sx={{ fontSize: '35px', color: '#a6b0cf' }} />
-                </Link>
-              </IconButton>
-            </Tooltip>
+                </IconButton>
+              </Tooltip>
+            </Link>
           </li>
         </ul>
       </div>
