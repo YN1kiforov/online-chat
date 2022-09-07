@@ -231,9 +231,10 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/registration', async (req, res) => {
+	console.log(req.body)
 	try {
 		const { name, email, password } = req.body
-		const user = new User({ name, email, password, avatarURL: '/uploads/incognito.png' })
+		const user = await new User({ name, email, password})
 		await user.save()
 		res.status(200).json({
 			message: "Пользователь создан"
