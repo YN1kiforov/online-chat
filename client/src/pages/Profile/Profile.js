@@ -13,14 +13,11 @@ import { UserId } from '../../redux/slices/auth'
 import axios from '../../axios'
 
 export const Profile = () => {
-
   const userId = useSelector(UserId);
   const dispatch = useDispatch()
   const [user, setUser] = useState(null);
   const [imageUrl, setImageUrl] = useState('/uploads/incognito.png');
   const [isEdit, setIsEdit] = useState(false);
-
-
   const formik = useFormik({
     initialValues: {
       name: '',
