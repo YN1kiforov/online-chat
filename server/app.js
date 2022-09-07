@@ -7,7 +7,6 @@ const multer = require('multer');
 app.get('/', (req, res) => { res.send('Вроде') });
 const http = require('http');
 app.use(cors())
-
 app.use(express.json())
 const server = http.createServer(app);
 
