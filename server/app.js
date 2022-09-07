@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 const fs = require('fs');
 const multer = require('multer');
-app.get('/', (req, res) => { res.send('Вроде работает') });
+app.get('/', (req, res) => { res.send('Вроде') });
 const http = require('http');
 
 const server = http.createServer(app);
