@@ -1,13 +1,11 @@
-$light-gray: #a6b0cf;
-$gray:#313942;
-$dark-gray: #262e35;
+@import "../../index.css";
 
 .login {
-	background-color: $gray;
+	background-color: var(--menu);
 	height: 100vh;
 	width: 100vw;
 	display: flex;
-	color: $light-gray;
+	color: var(--side-bar);
 	align-items: center;
 	justify-content: center;
 	&__wrapper {
@@ -16,7 +14,7 @@ $dark-gray: #262e35;
 	}
 	&__card {
 		padding: 35px;
-		background-color: $dark-gray;
+		background-color: var(--bg-content);
 		& .input {
 			&__title {
 				font-size: 18px;
@@ -25,9 +23,9 @@ $dark-gray: #262e35;
 			& input {
 				width: 100%;
 				border-radius: 5px;
-				background-color: #373f53;
+				background-color: var(--input-background);
 				height: 29px;
-				color: #e1e9f1;
+				color: var(--text-color);
 				padding: 4px 0px 4px 10px;
 				border: 0px;
 				outline: 0px;
@@ -49,8 +47,8 @@ $dark-gray: #262e35;
 		& button{
 			width: 100%;
 			height: 30px;
-			background-color: #7269ef;
-			color: #e1e9f1;
+			background-color: var(--button);
+			color: var(--text-color);
 			border: 0px;
 		}
 	}
@@ -58,7 +56,7 @@ $dark-gray: #262e35;
 		margin: 20px 0px 0px 0px;
 		text-align: center;
 		& a {
-			color: $light-gray;
+			color: var(--side-bar);
 		}
 	}
 }

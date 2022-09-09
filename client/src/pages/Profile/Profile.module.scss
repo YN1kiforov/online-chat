@@ -1,18 +1,16 @@
-$light-gray: #a6b0cf;
-$gray: #313942;
-$dark-gray: #262e35;
+@import "../../index.css";
 
 .wrapper {
-	color: $light-gray;
+	color: var(--text-color);
 	display: grid;
 	grid-template-areas: "menu1 content";
 	grid-template-columns: 75px auto;
 	grid-template-rows: 100vh;
-	background-color: $dark-gray;
+	background-color: var(--menu);
 }
 .content {
 	max-width: 1300px;
-	background-color: $gray;
+	background-color: var(--bg-content);
 	margin: 0 auto;
 	width: 100%;
 	padding: 0px 40px;
@@ -25,7 +23,6 @@ $dark-gray: #262e35;
 .avatar {
 	width: 80px;
 	height: 80px;
-	background-color: yellow;
 	border-radius: 50%;
 	margin: 0px 0px 0px 0px;
 	& img {

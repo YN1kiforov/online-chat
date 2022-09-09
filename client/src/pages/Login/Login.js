@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { Link, Navigate } from 'react-router-dom'
 import { fetchAuth, UserId } from '../../redux/slices/auth'
 
+
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Неправильный email').required('Обязательное поле'),
   password: Yup.string()
@@ -14,15 +15,13 @@ const SignupSchema = Yup.object().shape({
     .required('Обязательное поле'),
 });
 
-
 export const Login = () => {
   const dispatch = useDispatch()
+
   const userId = useSelector(UserId);
   if (userId) {
     return <Navigate to="/" />
   }
-
-
   return (
     <div className='login'>
       <div className='login__wrapper'>

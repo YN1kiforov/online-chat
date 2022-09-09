@@ -1,9 +1,7 @@
-$light-gray: #a6b0cf;
-$gray: #313942;
-$dark-gray: #262e35;
+@import "../../index.css";
 
 .wrapper {
-	color: $light-gray;
+	color: var(--text-color);
 	display: grid;
 	grid-template-areas: "menu1 content";
 	grid-template-columns: 75px auto;
@@ -12,7 +10,7 @@ $dark-gray: #262e35;
 
 .content {
 	grid-area: content;
-	background-color: $dark-gray;
+	background-color: var(--menu);
 	padding: 20px 40px;
 	display: grid;
 	grid-template-columns: repeat(5, calc(20% - 16px));
@@ -23,7 +21,7 @@ $dark-gray: #262e35;
 .button {
 	width: 40px;
 	height: 40px;
-	background-color: rgb(14, 14, 252);
+	background-color: var(--button);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -31,7 +29,7 @@ $dark-gray: #262e35;
 }
 .user {
 	display: flex;
-	border: 1px solid gray;
+	border: 1px solid var(--side-bar);
 	padding: 0px 20px;
 	justify-content: space-between;
 	align-items: center;
@@ -44,10 +42,10 @@ $dark-gray: #262e35;
 	height: 200px;
 	font-size: 24px;
 	transform: translate(-50%, -50%);
-	color: white;
+	color: var(--text-color);
 	text-align: center;
 	padding: 30px 10px;
-	background-color: rgb(69, 69, 80);
+	background-color: var(--menu);
 	& > input {
 		top: 0;
 		left: 0;
@@ -57,8 +55,8 @@ $dark-gray: #262e35;
 	}
 	& button {
 		height: 30px;
-		color: white;
-		background-color: rgb(14, 137, 252);
+		color: var(--text-color);
+		background-color: var(--button);
 	}
 }
 .title {
@@ -66,6 +64,6 @@ $dark-gray: #262e35;
 }
 .tip {
 	margin-top: 10px;
-	color: $light-gray;
+	color: var(--side-bar);
 	font-size: 15px;
 }

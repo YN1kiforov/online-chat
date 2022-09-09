@@ -77,7 +77,7 @@ export const Users = () => {
                 return <div className={s.user} >
                   <div className={s.name}>{user.name}</div>
                   <div className={s.button} onClick={() => { handleOpen(user._id) }} >
-                    <InsertComment sx={{ color: '#a6b0cf' }}></InsertComment>
+                    <InsertComment sx={{ color: 'white' }}></InsertComment>
                   </div>
                 </div>
               }
