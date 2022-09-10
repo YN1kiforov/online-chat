@@ -5,6 +5,8 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from 'react-router-dom'
 import { fetchAuth, UserId } from '../../redux/slices/auth'
+import { useSnackbar } from 'notistack';
+import { useState } from 'react'
 
 
 const SignupSchema = Yup.object().shape({
@@ -17,11 +19,13 @@ const SignupSchema = Yup.object().shape({
 
 export const Login = () => {
   const dispatch = useDispatch()
-
+  const { enqueueSnackbar } = useSnackbar();
+  const [isSumbit, setIsSumbit] = useState(false)
   const userId = useSelector(UserId);
   if (userId) {
     return <Navigate to="/" />
   }
+  
   return (
     <div className='login'>
       <div className='login__wrapper'>
@@ -34,7 +38,14 @@ export const Login = () => {
             }}
             validationSchema={SignupSchema}
             onSubmit={async (values) => {
-              await dispatch(fetchAuth(values))
+              setIsSumbit(true)
+              const res = await dispatch(fetchAuth(values))
+              if (res?.payload) {
+                enqueueSnackbar('Успех', { variant: "success", autoHideDuration: 3000 })
+              } else {
+                enqueueSnackbar("Ошибка при входе в аккаунт аккаунта", { variant: "error", autoHideDuration: 3000 })
+              }
+              setIsSumbit(false)
             }}
           >
             {({ errors, touched }) => (
@@ -53,7 +64,7 @@ export const Login = () => {
                   ) : null}
                 </div>
                 <div className='login__button'>
-                  <button className='' type="submit">Войти</button>
+                  <button disabled={isSumbit} className='' type="submit">Войти</button>
                 </div>
               </Form>
             )}

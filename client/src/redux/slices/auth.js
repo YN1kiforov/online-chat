@@ -26,9 +26,20 @@ const authSlice = createSlice({
 			state.data = null;
 		},
 		[fetchAuth.fulfilled]: (state, action) => {
+			console.log(`auth => ${JSON.stringify(action.payload)}`)
 			state.data = action.payload;
 		},
 		[fetchAuth.rejected]: (state) => {
+			state.data = null;
+		},
+		[fetchRegistration.pending]: (state) => {
+			state.data = null;
+		},
+		[fetchRegistration.fulfilled]: (state, action) => {
+			console.log(`reg => ${JSON.stringify(action.payload)}`)
+			state.data = action.payload;
+		},
+		[fetchRegistration.rejected]: (state) => {
 			state.data = null;
 		},
 	}

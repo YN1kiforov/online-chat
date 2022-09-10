@@ -50,6 +50,14 @@
 			background-color: var(--button);
 			color: var(--text-color);
 			border: 0px;
+			transition: all ease .6s;
+			cursor: pointer;
+			&:disabled{
+				background-color: var(--button-disabled);
+			}
+			&:hover{
+				background-color: var(--button-hover);
+			}
 		}
 	}
 	&__bottom{

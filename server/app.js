@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 const fs = require('fs');
 const multer = require('multer');
-app.get('/', (req, res) => { res.send('Вроде') });
 const http = require('http');
-app.use(express.json())
+
 const server = http.createServer(app);
+app.use(cors())
+app.use(express.json())
+app.get('/', (req, res) => { res.send('Вроде d') });
 
 const io = require("socket.io")(server, {
 	cors: {
@@ -31,7 +33,6 @@ io.on('connection', (socket) => {
 		io.emit('chat message', data)
 	})
 });
-app.use(cors())
 
 const storage = multer.diskStorage({
 	destination: (_, __, cb) => {
@@ -237,7 +238,7 @@ app.post('/registration', async (req, res) => {
 		const user = await new User({ name, email, password })
 		await user.save()
 		res.status(200).json({
-			message: "Пользователь создан"
+			message: "Пользователь создан",
 		})
 	}
 	catch (e) {

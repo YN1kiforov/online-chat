@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { fetchAllUsers } from '../../redux/slices/users'
 import { createChat } from '../../redux/slices/chat'
 import { useSnackbar } from 'notistack';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { SideMenu } from '../../components/SideMenu'
@@ -19,6 +20,7 @@ export const Users = () => {
   const [value, setValue] = useState("")
   const [userList, setUserList] = useState(null)
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true)
 
   const { enqueueSnackbar } = useSnackbar("This is a success message!", { variant: "error" });
 
@@ -35,6 +37,7 @@ export const Users = () => {
     (async () => {
       const data = await dispatch(fetchAllUsers())
       setUserList(data?.payload?.users)
+      setIsLoading(false)
     })()
   }, []);
   if (!userId) {
@@ -70,8 +73,9 @@ export const Users = () => {
             <div className={s.tip}>(Если вы не введете название, то будет использоваться имя собеседника)</div>
           </div>
         </Modal>
-        {
-          userList
+        {isLoading
+          ? <CircularProgress sx={{ color: '#a6b0cf' }} className={s.progress} />
+          : userList
             ? userList.map((user) => {
               if (userId !== user._id) {
                 return <div className={s.user} >

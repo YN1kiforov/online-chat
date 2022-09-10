@@ -29,6 +29,18 @@
 	gap: 40px;
 }
 .item{
-	border: yellow solid 2px;
 	height: 45px;
+	display: flex;
+	font-size: 20px;
+	align-items: center;
+	& button{
+		cursor: pointer;
+		background-color: var(--button);
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-left: 30px;
+	}
 }

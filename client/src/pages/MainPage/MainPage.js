@@ -1,5 +1,5 @@
-import { FaceSharp, Telegram } from "@mui/icons-material"
-
+import { Telegram } from "@mui/icons-material"
+import Skeleton from '@mui/material/Skeleton';
 import { io } from "socket.io-client";
 import { useState, useEffect, useRef } from 'react'
 import { UserId, } from '../../redux/slices/auth'
@@ -21,6 +21,8 @@ function Main() {
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const userId = useSelector(UserId);
   const dispatch = useDispatch()
 
@@ -33,6 +35,7 @@ function Main() {
   useEffect(() => {
     (async () => {
       const data = await dispatch(fetchFindAllUserChat(userId))
+      setIsLoading(false)
       setChats(data?.payload?.data)
     })()
 
@@ -64,17 +67,24 @@ function Main() {
       <div className={s.side_bar}>
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
-          {chats ? chats.map((item) => {
-            const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
-            const name = item.name || companion.name
-            const imageURL = companion?.avatarURL || '/uploads/incognito.png'
-            return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
-              <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
-              <div className={s.side_bar__chat_name}>{name}</div>
-            </div>
-          }) : <div className=''>Не найдено чата</div>}
+          {isLoading
+            ? [1,2,3,4,5,6,7,8].map(() => { return <Skeleton className={s.side_bar__chat} variant="rectangular" width={384} height={60} /> })
+            : chats ? chats.map((item) => {
+              const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
+              const name = item.name || companion.name
+              const imageURL = companion?.avatarURL || '/uploads/incognito.png'
+              return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
+                <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
+                <div className={s.side_bar__chat_name}>{name}</div>
+              </div>
+            }) : <div className=''>Не найдено чата</div>
+          }
         </ul>
       </div>
+
+
+
+
       <div className={s.chat}>
         {currentChat
           ? <>

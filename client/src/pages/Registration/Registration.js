@@ -6,6 +6,8 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from 'react-router-dom'
 import { fetchRegistration, UserId } from '../../redux/slices/auth'
+import { useState } from 'react'
+import { useSnackbar } from 'notistack';
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -23,9 +25,9 @@ const SignupSchema = Yup.object().shape({
 export const Registration = () => {
   const dispatch = useDispatch()
   const userId = useSelector(UserId);
-  if (userId) return <Navigate to="/"/>
-  
-  
+  const { enqueueSnackbar } = useSnackbar();
+  const [isSumbit, setIsSumbit] = useState(false)
+  if (userId) return <Navigate to="/" />
 
   return (
     <div className='registration'>
@@ -40,13 +42,18 @@ export const Registration = () => {
             }}
             validationSchema={SignupSchema}
             onSubmit={async (values) => {
+              setIsSumbit(true)
               const res = await dispatch(fetchRegistration(values))
-              res.payload ? localStorage.setItem('userId', res.payload.userId) : alert('Не удалось зарегестрироваться')
+              if (res?.payload) {
+                enqueueSnackbar('Аккаунт был создан', { variant: "success", autoHideDuration: 3000 })
+              } else {
+                enqueueSnackbar("Ошибка при создании аккаунта", { variant: "error", autoHideDuration: 3000 })
+              }
+              setIsSumbit(false)
             }}
           >
             {({ errors, touched }) => (
               <Form>
-
                 <div className='input'>
                   <div className='input__title'>Как вас зовут</div>
                   <Field name="name" />
@@ -68,10 +75,11 @@ export const Registration = () => {
                   ) : null}
                 </div>
                 <div className='registration__button'>
-                  <button className='' type="submit">Зарегистрироваться</button>
+                  <button disabled={isSumbit} type="submit">Зарегистрироваться</button>
                 </div>
               </Form>
             )}
+
           </Formik>
         </div>
         <div className='registration__bottom'>
@@ -81,3 +89,4 @@ export const Registration = () => {
     </div>
   )
 }
+//={isSumbit}

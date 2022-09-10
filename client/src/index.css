@@ -31,8 +31,10 @@ html[data-theme="dark"] {
   --menu: #313942;
   --bg-content: #262e35;
   --button: #7269ef;
+  --button-hover: #958fe9;
+  --button-disabled: #494594;
   --text-color:#e1e9f1;
-  --input-background:#373f53
+  --input-background:#373f53;
 }
 
 html[data-theme="light"] {
@@ -40,7 +42,8 @@ html[data-theme="light"] {
   --menu: #f5f7fb;
   --bg-content: #ffffff;
   --button: #7269ef;
+  --button-disabled: #494594;
   --text-color:#000000;
-  --input-background:#373f53
+  --input-background:#373f53;
 }
 
