@@ -10,7 +10,7 @@ export const fetchRegistration = createAsyncThunk('users/fetchRegistration', asy
 	return response.data
 })
 const initialState = {
-	data: null,
+	userId: localStorage.getItem('userId') || null,
 };
 
 const authSlice = createSlice({
@@ -18,7 +18,8 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		logout: (state) => {
-			state.data = null
+			state.userId = null
+			localStorage.removeItem('userId')
 		}
 	},
 	extraReducers: {
@@ -26,8 +27,8 @@ const authSlice = createSlice({
 			state.data = null;
 		},
 		[fetchAuth.fulfilled]: (state, action) => {
-			console.log(`auth => ${JSON.stringify(action.payload)}`)
-			state.data = action.payload;
+			state.userId = action.payload;
+			localStorage.setItem('userId', action.payload.userId);
 		},
 		[fetchAuth.rejected]: (state) => {
 			state.data = null;
@@ -36,8 +37,8 @@ const authSlice = createSlice({
 			state.data = null;
 		},
 		[fetchRegistration.fulfilled]: (state, action) => {
-			console.log(`reg => ${JSON.stringify(action.payload)}`)
-			state.data = action.payload;
+			state.userId = action.payload;
+			localStorage.setItem('userID', action.payload.userId);
 		},
 		[fetchRegistration.rejected]: (state) => {
 			state.data = null;
@@ -46,5 +47,5 @@ const authSlice = createSlice({
 })
 
 export const { logout } = authSlice.actions;
-export const UserId = (state) => state.auth.data?.userId
+export const UserId = (state) => state.auth.userId
 export const authReducer = authSlice.reducer;

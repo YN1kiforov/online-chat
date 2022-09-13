@@ -12,7 +12,10 @@ export const fetchFindMessages = createAsyncThunk('users/getMessages', async (da
 })
 export const createChat = createAsyncThunk('chat/createChat', async (data) => {
 	const response = await axios.post('/createChat', { name: data.value, usersId: data.usersId })
-
+	return response
+})
+export const createDialog = createAsyncThunk('chat/createDialog', async (data) => {
+	const response = await axios.post('/createDialog', { usersId: data.usersId })
 	return response
 })
 

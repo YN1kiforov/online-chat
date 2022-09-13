@@ -2,8 +2,7 @@ import { Telegram } from "@mui/icons-material"
 import Skeleton from '@mui/material/Skeleton';
 import { io } from "socket.io-client";
 import { useState, useEffect, useRef } from 'react'
-import { UserId, } from '../../redux/slices/auth'
-
+import { UserId } from '../../redux/slices/auth'
 import { fetchFindAllUserChat, fetchFindMessages } from '../../redux/slices/chat'
 import { sendMessage } from '../../redux/slices/message'
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,6 +41,7 @@ function Main() {
   }, []);
   useEffect(() => {
     socket.on('chat message', async (msg) => {
+      console.log('message')
       if (Array.isArray(messages) && msg.chatId === currentChat?._id) setMessages((prev) => [...prev, msg]);
     })
     return () => {
@@ -71,7 +71,7 @@ function Main() {
             ? [1,2,3,4,5,6,7,8].map(() => { return <Skeleton className={s.side_bar__chat} variant="rectangular" width={384} height={60} /> })
             : chats ? chats.map((item) => {
               const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
-              const name = item.name || companion.name
+              const name = item?.name || companion?.name
               const imageURL = companion?.avatarURL || '/uploads/incognito.png'
               return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
                 <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
@@ -108,8 +108,6 @@ function Main() {
                   return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
                 }) : <div className={s.helper}>Начните диалог</div>}
               </ul>
-
-
             </div>
             <div className={s.chat__bot}>
               <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />

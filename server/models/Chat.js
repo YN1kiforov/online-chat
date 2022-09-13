@@ -4,11 +4,16 @@ const schema = new Schema({
 	name: {
 		type: String,
 	},
-	usersId:{
+	usersId: {
 		type: [Schema.Types.ObjectId],
 		ref: 'User',
 		required: true,
-	}
+	},
+	isDialog: {
+		type: Boolean,
+		required: true,
+	},
+
 })
 
 module.exports = model('chat', schema)

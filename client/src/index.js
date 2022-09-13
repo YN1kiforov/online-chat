@@ -17,7 +17,6 @@ root.render(
         </SnackbarProvider>
       </Provider>
     </BrowserRouter>
-
   </React.StrictMode>
 );
 

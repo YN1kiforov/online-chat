@@ -103,22 +103,6 @@ app.post('/getMessage', async (req, res) => {
 	}
 })
 
-app.post('/deleteAllMessages', async (req, res) => {
-	try {
-		const messages = await Message.find()
-		messages.forEach(el => { el.remove() })
-		messages ? res.status(200).json({
-			message: `Сообщения успешно получены`,
-			messages,
-		})
-			: res.status(400).json({
-				message: "Не получилось"
-			})
-	}
-	catch (e) {
-		res.status(400).json({ message: `Ошибка: ${e}` })
-	}
-})
 
 
 
@@ -173,14 +157,35 @@ app.post('/findAllUserChat', async (req, res) => {
 app.post('/createChat', async (req, res) => {
 	try {
 		const { name, usersId } = req.body;
-
-		const isChatExist = !!(await Chat.findOne({ usersId }))
-		if (isChatExist) {
-			return res.status(400).json({ message: `Такой чат был уже создан` })
+		if (name.length === 0){
+			throw Error
 		}
-		const chat = await new Chat({ name, usersId })
+		const chat = await new Chat({ name, usersId, isDialog: false, })
+		
 		await chat.save()
 		chat ? res.status(200).json({
+			message: `Чат успешно создан`,
+			users: usersId,
+		})
+			: res.status(400).json({
+				message: "Не получилось создать чат"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
+	}
+})
+app.post('/createDialog', async (req, res) => {
+	try {
+		const { usersId } = req.body;
+
+		const isDialogExist = Boolean(await Chat.findOne({ usersId }))
+		if (isDialogExist) {
+			return res.status(400).json({ message: `Такой чат был уже создан` })
+		}
+		const dialog = await new Chat({ name: "", usersId, isDialog: true, })
+		await dialog.save()
+		dialog ? res.status(200).json({
 			message: `Чат успешно создан`,
 			users: usersId,
 			status: 200,
@@ -190,6 +195,7 @@ app.post('/createChat', async (req, res) => {
 			})
 	}
 	catch (e) {
+		console.log(e)
 		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
 	}
 })
@@ -246,6 +252,53 @@ app.post('/registration', async (req, res) => {
 	}
 })
 
+app.post('/deleteAllMessages', async (req, res) => {
+	try {
+		const messages = await Message.find()
+		messages.forEach(el => { el.remove() })
+		messages ? res.status(200).json({
+			message: `Сообщения успешно получены`,
+			messages,
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+app.post('/deleteAllChatsAndDialogs', async (req, res) => {
+	try {
+		const chats = await Chat.find()
+		chats.forEach(el => { el.remove() })
+		chats ? res.status(200).json({
+			message: `Сообщения успешно получены`,
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+app.post('/deleteAllUsers', async (req, res) => {
+	try {
+		const users = await User.find()
+		users.forEach(el => { el.remove() })
+		users ? res.status(200).json({
+			message: `Пользователи успешно удалены`,
+
+		})
+			: res.status(400).json({
+				message: "Не получилось"
+			})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
 server.listen(port, () => {
 	console.log('Server has been started');
 })
