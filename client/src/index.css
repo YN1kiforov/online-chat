@@ -22,9 +22,6 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
-* {
-  overflow: hidden;
-}
 
 html[data-theme="dark"] {
   --side-bar: #a6b0cf;

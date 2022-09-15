@@ -157,11 +157,11 @@ app.post('/findAllUserChat', async (req, res) => {
 app.post('/createChat', async (req, res) => {
 	try {
 		const { name, usersId } = req.body;
-		if (name.length === 0){
+		if (name.length === 0) {
 			throw Error
 		}
 		const chat = await new Chat({ name, usersId, isDialog: false, })
-		
+
 		await chat.save()
 		chat ? res.status(200).json({
 			message: `Чат успешно создан`,
@@ -195,7 +195,6 @@ app.post('/createDialog', async (req, res) => {
 			})
 	}
 	catch (e) {
-		console.log(e)
 		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
 	}
 })
@@ -238,7 +237,6 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/registration', async (req, res) => {
-	console.log(req.body)
 	try {
 		const { name, email, password } = req.body
 		const user = await new User({ name, email, password })
@@ -299,6 +297,47 @@ app.post('/deleteAllUsers', async (req, res) => {
 		res.status(400).json({ message: `Ошибка: ${e}` })
 	}
 })
+
+app.post('/changeChatName', async (req, res) => {
+	try {
+		const { chatId, name } = req.body;
+		await Chat.updateOne({ _id: chatId }, { $set: { name } })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
+app.post('/deleteDialog', async (req, res) => {
+	try {
+		const { chatId } = req.body;
+		await Chat.deleteOne({ _id: chatId })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+app.post('/deleteDialog', async (req, res) => {
+	try {
+		const { chatId } = req.body;
+		await Chat.deleteOne({ _id: chatId })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+app.post('/addCompanion', async (req, res) => {
+	try {
+		const { chatId, companionId } = req.body;
+		const chat = await Chat.findOne({ _id: chatId })
+		if (chat.isDialog) throw Error
+		await Chat.updateOne({ _id: chatId }, { $set: { usersId: [...chat.usersId, companionId] } })
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
+
 server.listen(port, () => {
 	console.log('Server has been started');
 })

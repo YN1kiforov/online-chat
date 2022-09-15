@@ -43,7 +43,7 @@
 			pointer-events: none;
 		}
 		display: flex;
-		& img{
+		& img {
 			width: 30px;
 			height: 30px;
 			margin-right: 20px;
@@ -61,20 +61,58 @@
 		min-height: 60px;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
+		margin: 0px 40px 0px 20px;
 	}
 	&__content {
 		height: 100%;
 		border: solid var(--side-bar);
 		border-width: 1px 0px 1px 0px;
+		overflow: auto;
 	}
 
 	&__user {
 		display: flex;
 		align-items: center;
 	}
+	&__options {
+		width: 40px;
+		height: 100%;
+		position: relative;
+		cursor: pointer;
+		& > span {
+			width: 5px;
+			height: 5px;
+			background-color: var(--text-color);
+			border-radius: 50%;
+			bottom: calc(50% + 3px);
+			left: 50%;
+			transform: translate(-50%, 100%);
+			position: absolute;
+		}
+		&::after,
+		&::before {
+			content: "";
+			position: absolute;
+			width: 5px;
+			height: 5px;
+			background-color: var(--text-color);
+			border-radius: 50%;
+			left: 50%;
+		}
+		&::after {
+			top: 13px;
+			transform: translate(-50%, 100%);
+		}
+		&::before {
+			bottom: 13px;
+			transform: translate(-50%, -100%);
+		}
+	}
+
 	&__img {
 		margin: 0px 15px 0px 5px;
-		& img{
+		& img {
 			width: 40px;
 			height: 40px;
 			border-radius: 50%;
@@ -129,5 +167,33 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(50%,-100%);
+	transform: translate(50%, -100%);
+}
+.modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	height: 200px;
+	font-size: 24px;
+	transform: translate(-50%, -50%);
+	color: var(--text-color);
+	text-align: center;
+	padding: 30px 10px;
+	background-color: var(--menu);
+	& > input {
+		top: 0;
+		left: 0;
+		width: 300px;
+		height: 30px;
+		font-size: 18px;
+	}
+	& button {
+		height: 30px;
+		color: var(--text-color);
+		background-color: var(--button);
+	}
+}
+.title {
+	margin-bottom: 30px;
 }

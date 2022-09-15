@@ -27,7 +27,7 @@ const authSlice = createSlice({
 			state.data = null;
 		},
 		[fetchAuth.fulfilled]: (state, action) => {
-			state.userId = action.payload;
+			state.userId = action.payload.userId;
 			localStorage.setItem('userId', action.payload.userId);
 		},
 		[fetchAuth.rejected]: (state) => {
@@ -37,7 +37,7 @@ const authSlice = createSlice({
 			state.data = null;
 		},
 		[fetchRegistration.fulfilled]: (state, action) => {
-			state.userId = action.payload;
+			state.userId = action.payload.userId;
 			localStorage.setItem('userID', action.payload.userId);
 		},
 		[fetchRegistration.rejected]: (state) => {

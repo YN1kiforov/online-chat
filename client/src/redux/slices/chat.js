@@ -18,8 +18,19 @@ export const createDialog = createAsyncThunk('chat/createDialog', async (data) =
 	const response = await axios.post('/createDialog', { usersId: data.usersId })
 	return response
 })
-
-
+export const changeChatName = createAsyncThunk('chat/createDialog', async (data) => {
+	const response = await axios.post('/changeChatName', data)
+	return response
+})
+export const deleteDialog = createAsyncThunk('chat/createDialog', async (data) => {
+	const response = await axios.post('/deleteDialog', data)
+	return response
+})
+export const setChatUsers = createAsyncThunk('chat/leaveChat', async (data) => {
+	const response = await axios.post('/leaveChat', data)
+	return response
+})
+ 
 const initialState = {};
 
 const chatSlice = createSlice({
