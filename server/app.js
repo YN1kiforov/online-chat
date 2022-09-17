@@ -28,9 +28,19 @@ const { MONGO_URI } = process.env
 mongoose.connect(MONGO_URI || 'mongodb+srv://admin:admin@cluster0.xvhkn1b.mongodb.net/?retryWrites=true&w=majority')
 	.then(() => console.log(`DB has been connected`))
 	.catch(e => console.log(`DB error: ${e}`))
+
 io.on('connection', (socket) => {
+
+	console.log(`connect ${socket?.client?.id}`)
 	socket.on('chat message', (data) => {
 		io.emit('chat message', data)
+	})
+	socket.on('notification', (data) => {
+		console.log("notification")
+		socket.broadcast.emit('notification', data)
+	})
+	socket.on('disconnect', (data) => {
+		console.log(`disconnect ${socket?.client?.id}`)
 	})
 });
 
@@ -38,7 +48,7 @@ const storage = multer.diskStorage({
 	destination: (_, __, cb) => {
 		if (!fs.existsSync('uploads')) {
 			fs.mkdirSync('uploads');
-		}
+		} 
 		cb(null, 'uploads');
 	},
 	filename: (_, file, cb) => {

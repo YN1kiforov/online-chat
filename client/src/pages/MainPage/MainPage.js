@@ -1,9 +1,9 @@
 import { Telegram } from "@mui/icons-material"
 import Skeleton from '@mui/material/Skeleton';
-import { io } from "socket.io-client";
+import socket from "../../socket";
 import { useState, useEffect, useRef } from 'react'
 import { UserId } from '../../redux/slices/auth'
-import { fetchFindAllUserChat, fetchFindMessages, deleteDialog, changeChatName, addCompanion } from '../../redux/slices/chat'
+import { fetchFindAllUserChat, fetchFindMessages, deleteDialog, changeChatName } from '../../redux/slices/chat'
 import { sendMessage } from '../../redux/slices/message'
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom'
@@ -14,8 +14,6 @@ import { Link } from 'react-router-dom';
 
 import Modal from '@mui/material/Modal';
 import s from "./MainPage.module.scss"
-
-const socket = io("https://online-chat-mern.herokuapp.com");
 
 function Main() {
   const scrollRef = useRef();
@@ -82,6 +80,7 @@ function Main() {
     await dispatch(sendMessage({ userId, value, currentChatId: currentChat._id }))
     setValue("")
     socket.emit('chat message', { content: value, chatId: currentChat._id, userId, });
+    socket.emit('notification', { });
   }
 
   return (
