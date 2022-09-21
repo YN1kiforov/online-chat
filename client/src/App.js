@@ -19,8 +19,8 @@ import Main from './pages/MainPage/MainPage';
 function App() {
   const { theme, setTheme } = useTheme()
   const userId = useSelector(UserId);
-  const { enqueueSnackbar } = useSnackbar("This is a success message!", { variant: "error" });
   const audioNotification = new Audio(sound);
+
   audioNotification.volume = 0.35;
   useEffect(() => {
     if (userId) {

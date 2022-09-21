@@ -3,7 +3,7 @@ import Skeleton from '@mui/material/Skeleton';
 import socket from "../../socket";
 import { useState, useEffect, useRef } from 'react'
 import { UserId } from '../../redux/slices/auth'
-import { fetchFindAllUserChat, fetchFindMessages, deleteDialog, changeChatName } from '../../redux/slices/chat'
+import { fetchFindAllUserChat, fetchFindMessages, deleteDialog, changeChatName, LastChatsVisit, setLastChatsVisit } from '../../redux/slices/chat'
 import { sendMessage } from '../../redux/slices/message'
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom'
@@ -25,16 +25,13 @@ function Main() {
   const [chatName, setChatName] = useState("")
 
   const userId = useSelector(UserId);
+  const lastChatsVisit = useSelector(LastChatsVisit);
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const open = Boolean(anchorEl);
-  const changeChat = async (Chat) => {
-    const data = await dispatch(fetchFindMessages(Chat._id))
-    setMessages(data?.payload?.messages)
-    setCurrentChat(Chat);
-  }
+
 
   useEffect(() => {
     (async () => {
@@ -46,13 +43,26 @@ function Main() {
   }, []);
   useEffect(() => {
     setChatName(currentChat?.name)
+    dispatch(setLastChatsVisit(currentChat?._id))
     socket.on('chat message', async (msg) => {
       if (Array.isArray(messages) && msg.chatId === currentChat?._id) setMessages((prev) => [...prev, msg]);
+
+      let UpdatedChat;
+      const chatsList = chats.filter((chat) => {
+        const isUpdatedChat = chat._id === msg.chatId
+        if (isUpdatedChat) UpdatedChat = chat
+        return !isUpdatedChat
+      })
+      if (UpdatedChat?._id !== currentChat?._id) {
+        UpdatedChat.updatedAt = new Date()
+      }
+      if (UpdatedChat) setChats([UpdatedChat, ...chatsList])
     })
     return () => {
       socket.off('chat message');
+      dispatch(setLastChatsVisit(currentChat?._id))
     };
-  }, [currentChat])
+  }, [currentChat, chats])
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -60,29 +70,35 @@ function Main() {
     return <Navigate to="/login" />
   }
 
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    console.log(event.currentTarget)
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
   const handelerChangeChatName = () => {
-    dispatch(changeChatName({ chatId: currentChat._id, name: chatName }))
+    dispatch(changeChatName({ chatId: currentChat?._id, name: chatName }))
     currentChat.name = chatName;
     setIsModalOpen(false)
   };
   const handelerDeleteDialog = () => {
-    dispatch(deleteDialog({chatId: currentChat._id}))
-    setChats((prev)=> prev.filter((chat)=> currentChat._id !== chat._id))
+    dispatch(deleteDialog({ chatId: currentChat._id }))
+    setChats((prev) => prev.filter((chat) => currentChat._id !== chat._id))
     setCurrentChat(null)
   };
   const submitMessage = async () => {
     await dispatch(sendMessage({ userId, value, currentChatId: currentChat._id }))
     setValue("")
     socket.emit('chat message', { content: value, chatId: currentChat._id, userId, });
-    socket.emit('notification', { });
+    socket.emit('notification', {});
   }
-
+  const changeChat = async (Chat) => {
+    const data = await dispatch(fetchFindMessages(Chat._id))
+    setMessages(data?.payload?.messages)
+    setCurrentChat(Chat);
+  }
   return (
     <div className={s.wrapper}>
       <SideMenu></SideMenu>
@@ -95,7 +111,10 @@ function Main() {
               const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
               const name = item?.name || companion?.name
               const imageURL = companion?.avatarURL || '/uploads/incognito.png'
-              return <div onClick={() => { changeChat(item) }} className={s.side_bar__chat}>
+              console.log(`LastChatsVisit: ${lastChatsVisit[item._id]} \nitem: ${Date.parse(item.updatedAt)}   \nisRead: ${lastChatsVisit[item._id] > Date.parse(item.updatedAt)}`)
+              const isRead = lastChatsVisit[item._id] > Date.parse(item.updatedAt)
+
+              return <div onClick={() => { changeChat(item) }} className={isRead ? `${s.side_bar__chat} ` : `${s.side_bar__chat} ${s.unread}`}>
                 <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
                 <div className={s.side_bar__chat_name}>{name}</div>
               </div>
@@ -103,10 +122,6 @@ function Main() {
           }
         </ul>
       </div>
-
-
-
-
       <div className={s.chat}>
         {currentChat
           ? <>
@@ -126,7 +141,7 @@ function Main() {
                   <div onClick={handleClick} className={s.chat__options}>
                     <span></span>
                   </div>
-                  <Menu
+                  {/* <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}
                     open={open}
@@ -152,7 +167,7 @@ function Main() {
                         <MenuItem sx={{ color: "red" }} onClick={() => { handleClose() }}>Выйти из чата</MenuItem>
                       </>
                     }
-                  </Menu>
+                  </Menu> */}
                 </>
 
               })()}

@@ -48,7 +48,7 @@ const storage = multer.diskStorage({
 	destination: (_, __, cb) => {
 		if (!fs.existsSync('uploads')) {
 			fs.mkdirSync('uploads');
-		} 
+		}
 		cb(null, 'uploads');
 	},
 	filename: (_, file, cb) => {
@@ -131,8 +131,9 @@ app.post('/sendMessage', async (req, res) => {
 	try {
 		const { content, userId, chatId } = req.body
 		const message = await new Message({ content, userId, chatId })
-
 		await message.save()
+		await Chat.updateOne({ _id: chatId },{$set:{}})
+		
 		message ? res.status(200).json({
 			message: `Сообщение успешно создано`,
 		})
@@ -148,18 +149,19 @@ app.post('/sendMessage', async (req, res) => {
 app.post('/findAllUserChat', async (req, res) => {
 	try {
 		const { userId } = req.body
-
-		const data = await Chat.find({ usersId: userId }).populate({ path: "usersId", model: "User" });
-
+		const data = await Chat.find({ usersId: userId }).sort({updatedAt: -1}).populate({ path: "usersId", model: "User" })
+		const sortedByTimeData = 3;
 		data ? res.status(200).json({
 			message: `Чат найден`,
-			data: data,
+			data: data || [],
 		})
 			: res.status(400).json({
 				message: "Не получилось создать чат"
 			})
 	}
+	//
 	catch (e) {
+		console.log(e)
 		res.status(400).json({ message: `Ошибка при поиске чата: ${e}` })
 	}
 })
@@ -170,7 +172,7 @@ app.post('/createChat', async (req, res) => {
 		if (name.length === 0) {
 			throw Error
 		}
-		const chat = await new Chat({ name, usersId, isDialog: false, })
+		const chat = await new Chat({ name, usersId, isDialog: false, lastActivity: Date.now })
 
 		await chat.save()
 		chat ? res.status(200).json({
@@ -193,7 +195,7 @@ app.post('/createDialog', async (req, res) => {
 		if (isDialogExist) {
 			return res.status(400).json({ message: `Такой чат был уже создан` })
 		}
-		const dialog = await new Chat({ name: "", usersId, isDialog: true, })
+		const dialog = await new Chat({ name: "", usersId, isDialog: true, lastActivity: Date.now })
 		await dialog.save()
 		dialog ? res.status(200).json({
 			message: `Чат успешно создан`,
@@ -205,6 +207,7 @@ app.post('/createDialog', async (req, res) => {
 			})
 	}
 	catch (e) {
+		console.log(e)
 		res.status(400).json({ message: `Ошибка при cоздании чата: ${e}` })
 	}
 })
@@ -340,7 +343,9 @@ app.post('/addCompanion', async (req, res) => {
 	try {
 		const { chatId, companionId } = req.body;
 		const chat = await Chat.findOne({ _id: chatId })
-		if (chat.isDialog) throw Error
+		if (chat.isDialog) {
+			throw new Error
+		}
 		await Chat.updateOne({ _id: chatId }, { $set: { usersId: [...chat.usersId, companionId] } })
 	}
 	catch (e) {

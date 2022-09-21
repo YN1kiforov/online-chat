@@ -26,6 +26,9 @@ const schema = new Schema({
 	about: {
 		type: String,
 	},
+	isOnline: {
+		type: Boolean ,
+	},
 })
 
 module.exports = model('User', schema)

@@ -197,3 +197,21 @@
 .title {
 	margin-bottom: 30px;
 }
+.unread{
+	position: relative;
+	&::after{
+		content: "!";
+		width: 20px;
+		height: 20px;
+		color: white;
+		position: absolute;
+		font-size: 14px;
+		background-color: red;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transform: translateY(-50%);
+		top: 50%;
+		right: 30px;
+	}
+}
