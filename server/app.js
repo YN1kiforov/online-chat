@@ -132,8 +132,8 @@ app.post('/sendMessage', async (req, res) => {
 		const { content, userId, chatId } = req.body
 		const message = await new Message({ content, userId, chatId })
 		await message.save()
-		await Chat.updateOne({ _id: chatId },{$set:{}})
-		
+		await Chat.updateOne({ _id: chatId }, { $set: {} })
+
 		message ? res.status(200).json({
 			message: `Сообщение успешно создано`,
 		})
@@ -149,7 +149,7 @@ app.post('/sendMessage', async (req, res) => {
 app.post('/findAllUserChat', async (req, res) => {
 	try {
 		const { userId } = req.body
-		const data = await Chat.find({ usersId: userId }).sort({updatedAt: -1}).populate({ path: "usersId", model: "User" })
+		const data = await Chat.find({ usersId: userId }).sort({ updatedAt: -1 }).populate({ path: "usersId", model: "User" })
 		const sortedByTimeData = 3;
 		data ? res.status(200).json({
 			message: `Чат найден`,
@@ -214,10 +214,18 @@ app.post('/createDialog', async (req, res) => {
 
 app.get('/allUsers', async (req, res) => {
 	try {
+		const { page, limit } = req.query;
 		const data = await User.find()
+		const startIndex = limit * (page - 1)
+		const endIndex = limit * (page)
+		const TotalCount = Math.ceil(data.length / limit)
+		const users = data.slice(startIndex, endIndex)
+
+
 		data ? res.status(200).json({
 			message: `Пользователи найдены`,
-			users: data,
+			users,
+			TotalCount,
 		})
 			: res.status(400).json({
 				message: "Пользователи не найдены"
@@ -310,7 +318,22 @@ app.post('/deleteAllUsers', async (req, res) => {
 		res.status(400).json({ message: `Ошибка: ${e}` })
 	}
 })
+app.post('/add100Users', async (req, res) => {
+	try {
+		for (let i = 1; i <= 100; i++) {
+			const { name, email, password } = req.body
+			const user = await new User({ name: `user${i}`, email: `user${i}`, password: "password" })
+			await user.save()
 
+		}
+		res.status(200).json({
+			message: "Пользователь создан",
+		})
+	}
+	catch (e) {
+		res.status(400).json({ message: `Ошибка: ${e}` })
+	}
+})
 app.post('/changeChatName', async (req, res) => {
 	try {
 		const { chatId, name } = req.body;

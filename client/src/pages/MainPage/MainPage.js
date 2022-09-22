@@ -141,7 +141,7 @@ function Main() {
                   <div onClick={handleClick} className={s.chat__options}>
                     <span></span>
                   </div>
-                  {/* <Menu
+                  <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}
                     open={open}
@@ -161,13 +161,13 @@ function Main() {
                       </>
                       : <>
                         <MenuItem onClick={() => { handleClose(); setIsModalOpen(true) }}>Поменять название</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Добавить собеседника</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Изменить аватарку чата</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Посмотреть список участников</MenuItem>
+                        <MenuItem onClick={() => { handleClose() }}>Добавить собеседника*</MenuItem>
+                        <MenuItem onClick={() => { handleClose() }}>Изменить аватарку чата*</MenuItem>
+                        <MenuItem onClick={() => { handleClose() }}>Посмотреть список участников*</MenuItem>
                         <MenuItem sx={{ color: "red" }} onClick={() => { handleClose() }}>Выйти из чата</MenuItem>
                       </>
                     }
-                  </Menu> */}
+                  </Menu>
                 </>
 
               })()}

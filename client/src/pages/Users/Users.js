@@ -10,6 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+import Pagination from '@mui/material/Pagination';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { SideMenu } from '../../components/SideMenu'
@@ -20,6 +21,8 @@ import s from "./Users.module.scss"
 import { UserId } from '../../redux/slices/auth'
 
 export const Users = () => {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [countPages, setCountPages] = useState(0)
   const [value, setValue] = useState("")
   const [userList, setUserList] = useState(null)
   const dispatch = useDispatch()
@@ -41,15 +44,18 @@ export const Users = () => {
     setAnchorEl(null);
   };
   const userId = useSelector(UserId);
-
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   useEffect(() => {
     (async () => {
-      const data = await dispatch(fetchAllUsers())
+      const data = await dispatch(fetchAllUsers(currentPage))
+      setCountPages(data?.payload?.TotalCount)
       setUserList(data?.payload?.users)
       setIsLoading(false)
     })()
-  }, []);
+  }, [currentPage]);
   if (!userId) {
     return <Navigate to="/login" />
   }
@@ -119,16 +125,22 @@ export const Users = () => {
                 <MenuItem onClick={() => { handleMenuClose(); setIsModalOpen(true) }}>Создать чат</MenuItem>
               </Menu>
 
-              {userList.map((user) => {
-                if (userId !== user._id) {
-                  return <div className={s.user} >
-                    <div className={s.name}>{user.name}</div>
-                    <button className={s.button} onClick={(e) => { setCompanionId(user._id); handleMenu(e) }}>
-                      <AddIcon sx ={{color: "white"}} />
-                    </button>
-                  </div>
-                }
-              })}
+              <div className={s.list}>
+                {userList.map((user) => {
+                  if (userId !== user._id) {
+                    return <div className={s.user} >
+                      <div className={s.name}>{user.name}</div>
+                      <button className={s.button} onClick={(e) => { setCompanionId(user._id); handleMenu(e) }}>
+                        <AddIcon sx={{ color: "white" }} />
+                      </button>
+                    </div>
+                  }
+                })}
+              </div>
+              <div className={s.bot}>
+                <Pagination count={countPages} page={currentPage} onChange={handleChange} />
+
+              </div>
             </>
             : <div> Не удалось найти пользователей</div>
         }

@@ -6,17 +6,38 @@
 	grid-template-areas: "menu1 content";
 	grid-template-columns: 75px auto;
 	grid-template-rows: 100vh;
+	background-color: var(--menu);
 }
 
 .content {
 	grid-area: content;
-	background-color: var(--menu);
 	padding: 20px 40px;
-	display: grid;
-	grid-template-columns: repeat(5, calc(20% - 16px));
-	grid-auto-rows: 60px;
-	gap: 20px;
 	font-size: 24px;
+	max-width: 1300px;
+	background-color: var(--bg-content);
+	margin: 0 auto;
+	width: 100%;
+	padding: 20px 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.list{
+	display: grid;
+	grid-template-columns: repeat(3, calc(33.33% - 13.333px));
+	grid-auto-rows: 60px;
+	overflow: auto;
+	gap: 20px;
+
+}
+.bot{
+	display: flex;
+	margin-bottom: 20px;
+	justify-content: center;
+	& button{
+		color: white;
+
+	}
 }
 .button {
 	width: 40px;

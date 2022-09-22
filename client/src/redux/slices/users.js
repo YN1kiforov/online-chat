@@ -3,8 +3,9 @@ import axios from '../../axios'
 
 const initialState = {}
 
-export const fetchAllUsers = createAsyncThunk('users/fetchByIdStatus', async () => {
-	const response = await axios.get('/allUsers')
+export const fetchAllUsers = createAsyncThunk('users/fetchByIdStatus', async (page) => {
+	
+	const response = await axios.get(`/allUsers?page=${page}&limit=27`)
 	return response.data
 })
 export const setUserName = createAsyncThunk('users/setUserName', async (data) => {
