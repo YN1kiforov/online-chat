@@ -6,24 +6,6 @@
 	grid-template-columns: 75px 384px auto;
 	grid-template-rows: 100vh;
 }
-.menu {
-	grid-area: menu1;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	background-color: var(--bg-content);
-	text-align: center;
-
-	&__logo {
-		margin-top: 10px;
-	}
-	&__item {
-		margin: 0px 0px 25px 0px;
-		&:last-child {
-			margin: 0px 0px 0px 0px;
-		}
-	}
-}
 
 .side_bar {
 	grid-area: side-bar;

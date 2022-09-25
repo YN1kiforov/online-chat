@@ -1,6 +1,6 @@
 
 import { useDispatch, useSelector } from 'react-redux';
-import { SideMenu } from '../../components/SideMenu'
+import { SideMenu } from '../../components/SideMenu/SideMenu'
 import { Navigate } from 'react-router-dom'
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode'

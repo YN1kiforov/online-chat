@@ -7,11 +7,11 @@ import { fetchFindAllUserChat, fetchFindMessages, deleteDialog, changeChatName, 
 import { sendMessage } from '../../redux/slices/message'
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom'
-import { SideMenu } from '../../components/SideMenu'
+import { SideMenu } from '../../components/SideMenu/SideMenu'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
-
+import incognito from "../../assets/incognito.png"
 import Modal from '@mui/material/Modal';
 import s from "./MainPage.module.scss"
 
@@ -89,6 +89,9 @@ function Main() {
     setCurrentChat(null)
   };
   const submitMessage = async () => {
+    if (value.length === 0){
+      return
+    }
     await dispatch(sendMessage({ userId, value, currentChatId: currentChat._id }))
     setValue("")
     socket.emit('chat message', { content: value, chatId: currentChat._id, userId, });
@@ -110,30 +113,30 @@ function Main() {
             : chats ? chats.map((item) => {
               const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
               const name = item?.name || companion?.name
-              const imageURL = companion?.avatarURL || '/uploads/incognito.png'
+              const imageURL = companion?.avatarURL ? `https://online-chat-mern.herokuapp.com${companion?.avatarURL}` : incognito 
               console.log(`LastChatsVisit: ${lastChatsVisit[item._id]} \nitem: ${Date.parse(item.updatedAt)}   \nisRead: ${lastChatsVisit[item._id] > Date.parse(item.updatedAt)}`)
               const isRead = lastChatsVisit[item._id] > Date.parse(item.updatedAt)
 
               return <div onClick={() => { changeChat(item) }} className={isRead ? `${s.side_bar__chat} ` : `${s.side_bar__chat} ${s.unread}`}>
-                <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
+                <img src={imageURL} />
                 <div className={s.side_bar__chat_name}>{name}</div>
               </div>
             }) : <div className=''>Не найдено чата</div>
           }
         </ul>
       </div>
-      <div className={s.chat}>
+      <form onSubmit={submitMessage} className={s.chat}>
         {currentChat
           ? <>
             <div className={s.chat__top}>
               {(() => {
                 const companion = (currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1] : currentChat?.usersId[0]
                 const name = currentChat?.name || ((currentChat?.usersId[0]._id == userId) ? currentChat?.usersId[1].name : currentChat?.usersId[0].name)
-                const imageURL = companion?.avatarURL || '/uploads/incognito.png'
+                const imageURL = companion?.avatarURL ? `https://online-chat-mern.herokuapp.com${companion?.avatarURL}` : incognito 
                 return <>
                   <div className={s.chat__user}>
                     <div className={s.chat__img}>
-                      <img src={`https://online-chat-mern.herokuapp.com${imageURL}`} />
+                      <img src={imageURL} />
                     </div>
                     <div className={s.chat__name}>{name}</div>
 
@@ -181,7 +184,7 @@ function Main() {
             </div>
             <div className={s.chat__bot}>
               <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
-              <button onClick={submitMessage} className={s.chat__send}>
+              <button type="submit" disabled={value.length === 0} className={s.chat__send}>
                 <Telegram sx={{ color: "white" }} />
               </button>
             </div>
@@ -189,7 +192,7 @@ function Main() {
           : <div className={s.helper}>Выберите чат</div>
         }
 
-      </div>
+      </form>
       <Modal
         open={isModalOpen}
         onClose={() => { setIsModalOpen(false) }}

@@ -1,4 +1,3 @@
-import { InsertComment } from "@mui/icons-material"
 import Modal from '@mui/material/Modal';
 
 
@@ -7,13 +6,13 @@ import { fetchAllUsers } from '../../redux/slices/users'
 import { createChat, createDialog } from '../../redux/slices/chat'
 import { useSnackbar } from 'notistack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
+import { MenuItem, Menu } from "@mui/material"
 import { Link } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import Pagination from '@mui/material/Pagination';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { SideMenu } from '../../components/SideMenu'
+import { SideMenu } from '../../components/SideMenu/SideMenu'
 import { Navigate } from 'react-router-dom'
 
 

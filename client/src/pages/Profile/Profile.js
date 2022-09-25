@@ -4,13 +4,14 @@ import { Tooltip, IconButton } from "@mui/material"
 
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch, useSelector } from 'react-redux';
-import { SideMenu } from '../../components/SideMenu'
+import { SideMenu } from '../../components/SideMenu/SideMenu'
 import { Navigate, useParams } from 'react-router-dom'
 import { useFormik } from 'formik';
 import CircularProgress from '@mui/material/CircularProgress';
 import s from "./Profile.module.scss"
 import { UserId } from '../../redux/slices/auth'
 import axios from '../../axios'
+import incognito from "../../assets/incognito.png"
 
 export const Profile = (props) => {
   const userId = useSelector(UserId);
@@ -18,7 +19,7 @@ export const Profile = (props) => {
   const dispatch = useDispatch()
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true)
-  const [imageUrl, setImageUrl] = useState('/uploads/incognito.png');
+  const [imageUrl, setImageUrl] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const isYourAccount = profileUserId === userId;
   const formik = useFormik({
@@ -42,7 +43,7 @@ export const Profile = (props) => {
       setIsLoading(false)
       const { name, county, city, about } = user?.payload?.user
       formik.setValues({ name, county, city, about })
-      setImageUrl(user?.payload?.user?.avatarURL || '/uploads/incognito.png')
+      setImageUrl(user?.payload?.user?.avatarURL)
     })()
   }, [])
 
@@ -74,8 +75,8 @@ export const Profile = (props) => {
               <div className={s.top}>
                 <div className={s.avatar}>
                   {isEdit
-                    ? <img src={`https://online-chat-mern.herokuapp.com${imageUrl}`} />
-                    : <img src={`https://online-chat-mern.herokuapp.com${user?.avatarURL}`} />
+                    ? <img src={imageUrl ? `https://online-chat-mern.herokuapp.com${imageUrl}` : incognito} />
+                    : <img src={user?.avatarURL ? `https://online-chat-mern.herokuapp.com${user?.avatarURL}` : incognito} />
                   }
                 </div>
                 {isEdit
@@ -131,12 +132,8 @@ export const Profile = (props) => {
             </>
             : <div className={s.center}>Не удалось найти пользователя</div>
         }
-
       </form>
-
-
     </div>
-
   )
 }
 

@@ -1,12 +1,13 @@
-import { FaceSharp, PermIdentitySharp, InsertComment, PeopleAlt, Settings, AccountCircle, Telegram } from "@mui/icons-material"
+import { PermIdentitySharp, InsertComment, PeopleAlt, Settings, AccountCircle } from "@mui/icons-material"
 import { Tooltip, IconButton, MenuItem, Menu } from "@mui/material"
 
 import { useState } from 'react'
-import { logout } from '../redux/slices/auth'
+import { logout } from '../../redux/slices/auth'
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import logo from "../../assets/logo.png"
+import s from "./SideMenu.module.scss"
 
-import s from "../pages/MainPage/MainPage.module.scss"
 
 export const SideMenu = () => {
 
@@ -22,9 +23,10 @@ export const SideMenu = () => {
 
   return (
     <div className={s.menu}>
-      <div className={s.menu__logo}>
-        <FaceSharp sx={{ fontSize: '55px', color: '#a6b0cf' }} />
-      </div>
+
+      <Link to="/">
+        <img className={s.menu__logo} src={logo}></img>
+      </Link>
       <div className={s.menu__center}>
         <ul className={s.menu__list}>
           <li className={s.menu__item}>
