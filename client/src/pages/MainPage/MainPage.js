@@ -99,8 +99,6 @@ function Main() {
   }
   const changeChat = async (Chat) => {
     const data = await dispatch(fetchFindMessages(Chat._id))
-    console.log('меняю чат')
-    console.log(data?.payload?.message)
     setMessages(data?.payload?.message)
     setCurrentChat(Chat);
   }
