@@ -73,22 +73,22 @@ function Main() {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget)
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handelerChangeChatName = () => {
+  const handleChangeChatName = () => {
     dispatch(changeChatName({ chatId: currentChat?._id, name: chatName }))
     currentChat.name = chatName;
     setIsModalOpen(false)
   };
-  const handelerDeleteDialog = () => {
+  const handleDeleteDialog = () => {
     dispatch(deleteDialog({ chatId: currentChat._id }))
     setChats((prev) => prev.filter((chat) => currentChat._id !== chat._id))
     setCurrentChat(null)
   };
-  const submitMessage = async () => {
+  const submitMessage = async (e) => {
+    e.preventDefault()
     if (value.length === 0){
       return
     }
@@ -109,12 +109,11 @@ function Main() {
         <h2 className={s.side_bar__title}>Chats</h2>
         <ul className={s.side_bar__chats}>
           {isLoading
-            ? [1, 2, 3, 4, 5, 6, 7, 8].map(() => { return <Skeleton className={s.side_bar__chat} variant="rectangular" width={384} height={60} /> })
+            ? [1, 2, 3, 4, 5, 6, 7, 8].map((i,index) => { return <Skeleton key ={`${index}`}  className={s.side_bar__chat} variant="rectangular" width={384} height={60} /> })
             : chats ? chats.map((item) => {
               const companion = (item?.usersId[0]._id == userId) ? item?.usersId[1] : item?.usersId[0]
               const name = item?.name || companion?.name
               const imageURL = companion?.avatarURL ? `https://online-chat-mern.herokuapp.com${companion?.avatarURL}` : incognito 
-              console.log(`LastChatsVisit: ${lastChatsVisit[item._id]} \nitem: ${Date.parse(item.updatedAt)}   \nisRead: ${lastChatsVisit[item._id] > Date.parse(item.updatedAt)}`)
               const isRead = lastChatsVisit[item._id] > Date.parse(item.updatedAt)
 
               return <div onClick={() => { changeChat(item) }} className={isRead ? `${s.side_bar__chat} ` : `${s.side_bar__chat} ${s.unread}`}>
@@ -160,14 +159,14 @@ function Main() {
                           <MenuItem sx={{ color: "black" }}>Посмотреть профиль</MenuItem>
                         </Link>
                         <MenuItem onClick={() => { handleClose() }}>Поиск сообщений*</MenuItem>
-                        <MenuItem sx={{ color: "red" }} onClick={handelerDeleteDialog}>Удалить диалог</MenuItem>
+                        <MenuItem sx={{ color: "red" }} onClick={handleDeleteDialog}>Удалить диалог</MenuItem>
                       </>
                       : <>
-                        <MenuItem onClick={() => { handleClose(); setIsModalOpen(true) }}>Поменять название</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Добавить собеседника*</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Изменить аватарку чата*</MenuItem>
-                        <MenuItem onClick={() => { handleClose() }}>Посмотреть список участников*</MenuItem>
-                        <MenuItem sx={{ color: "red" }} onClick={() => { handleClose() }}>Выйти из чата</MenuItem>
+                        <MenuItem key="1" onClick={() => { handleClose() }}>Добавить собеседника*</MenuItem>
+                        <MenuItem key="2" onClick={() => { handleClose(); setIsModalOpen(true) }}>Поменять название</MenuItem>
+                        <MenuItem key="3" onClick={() => { handleClose() }}>Изменить аватарку чата*</MenuItem>
+                        <MenuItem key="4" onClick={() => { handleClose() }}>Посмотреть список участников*</MenuItem>
+                        <MenuItem key="5" sx={{ color: "red" }} onClick={() => { handleClose() }}>Выйти из чата</MenuItem>
                       </>
                     }
                   </Menu>
@@ -177,8 +176,8 @@ function Main() {
             </div>
             <div className={s.chat__content} >
               <ul className={s.chat__messages}>
-                {messages.length !== 0 ? messages.map((message) => {
-                  return <div ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
+                {messages && messages.length !== 0 ? messages.map((message,index) => {
+                  return <div key ={`${index}`} ref={scrollRef} className={message.userId == userId ? s.chat__message + ` ${s.owner}` : s.chat__message}><p>{message.content}</p></div>
                 }) : <div className={s.helper}>Начните диалог</div>}
               </ul>
             </div>
@@ -202,7 +201,7 @@ function Main() {
         <div className={s.modal}>
           <div className={s.title}>Введите новое название чата </div>
           <input value={chatName} onChange={(e) => { setChatName(e.target.value) }}></input>
-          <button onClick={handelerChangeChatName}>Изменить</button>
+          <button onClick={handleChangeChatName}>Изменить</button>
         </div>
       </Modal>
     </div>)
