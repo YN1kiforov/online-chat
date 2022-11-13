@@ -88,6 +88,7 @@ function Main() {
     setCurrentChat(null)
   };
   const submitMessage = async (e) => {
+    console.log(e)
     e.preventDefault()
     if (value.length === 0){
       return
@@ -182,7 +183,7 @@ function Main() {
               </ul>
             </div>
             <div className={s.chat__bot}>
-              <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage() } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
+              <input value={value} onKeyDown={(e) => { if (e.code === "Enter") { submitMessage(e) } }} onChange={(e) => { setValue(e.target.value) }} className={s.chat__input} placeholder="Отправить сообщение" />
               <button type="submit" disabled={value.length === 0} className={s.chat__send}>
                 <Telegram sx={{ color: "white" }} />
               </button>
@@ -206,5 +207,4 @@ function Main() {
       </Modal>
     </div>)
 }
-
 export default Main;
