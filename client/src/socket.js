@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const URL = "https://online-chat-mern.herokuapp.com";
+const URL = "online-chat-swart.vercel.app";
 
 const socket = io(URL, { autoConnect: false });
 export default socket 
